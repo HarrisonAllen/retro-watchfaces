@@ -1,0 +1,35 @@
+{
+  "name": "retro-watchface-template",
+  "author": "Harrison Allen",
+  "version": "1.0.0",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "Retro Watchface Template",
+    "uuid": "d898ce0d-b19d-4f84-95b5-30cead4345cd",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "aplite",
+      "basalt",
+      "chalk",
+      "diorite"
+    ],
+    "watchapp": {
+      "watchface": false
+    },
+    "messageKeys": [
+      "dummy"
+    ],
+    "resources": {
+      "media": [
+        {
+            "type": "bitmap", 
+            "name": "IMAGE_TEMPLATE", 
+            "file": "images/Template.png"
+        }
+      ]
+    }
+  }
+}

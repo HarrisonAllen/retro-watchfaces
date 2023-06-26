@@ -1,0 +1,60 @@
+{
+  "name": "RetroSeries_SuperMarioBros",
+  "author": "MakeAwesomeHappen",
+  "version": "1.0.0",
+  "keywords": ["pebble-app"],
+  "private": true,
+  "dependencies": {},
+  "pebble": {
+    "displayName": "Super Mario Bros - Retro Series",
+    "uuid": "20bd91a3-6bde-4867-9d44-11075e855ff1",
+    "sdkVersion": "3",
+    "enableMultiJS": true,
+    "targetPlatforms": [
+      "aplite",
+      "basalt",
+      "chalk",
+      "diorite"
+    ],
+    "watchapp": {
+      "watchface": false
+    },
+    "messageKeys": [
+      "dummy"
+    ],
+    "resources": {
+      "media": [
+        {
+          "type": "raw",
+          "name": "DATA_BG_TILESHEET",
+          "file": "data/BG_Tilesheet.bin"
+        },
+        {
+          "type": "raw",
+          "name": "DATA_SPRITE_TILESHEET",
+          "file": "data/Sprite_Tilesheet.bin"
+        },
+        {
+          "type": "raw",
+          "name": "DATA_BG_0_TILEMAP",
+          "file": "data/Background_0_tilemap.bin"
+        },
+        {
+          "type": "raw",
+          "name": "DATA_BG_0_ATTRMAP",
+          "file": "data/Background_0_attrmap.bin"
+        },
+        {
+          "type": "raw",
+          "name": "DATA_BG_1_TILEMAP",
+          "file": "data/Background_1_tilemap.bin"
+        },
+        {
+          "type": "raw",
+          "name": "DATA_BG_1_ATTRMAP",
+          "file": "data/Background_1_attrmap.bin"
+        }
+      ]
+    }
+  }
+}
