@@ -17,12 +17,38 @@
 #define TIME_LAYER 2
 
 #define SPRITE_BOTTOM_Y 152
+#define FRAMES_PER_SPRITE 4
+#define WALK_FRAMES FRAMES_PER_SPRITE - 1
+#define TOTAL_SPRITES 28
 
 #define FRAME_DURATION 100
 
 static Window *s_window;
 static GBC_Graphics *s_gbc_graphics;
 static AppTimer *s_frame_timer;
+
+typedef enum {
+    AS_WALK_ON,
+    AS_STAND,
+    AS_WALK,
+    AS_WALK_OFF,
+    AS_OFFSCREEN
+} ActorState;
+
+// TODO: Make a sprite data structure
+typedef struct {
+    uint8_t sprite_index;
+    uint8_t x;
+    uint8_t y;
+    uint8_t width;
+    uint8_t height;
+    uint8_t base_sprite;
+    uint8_t walk_frame;
+    uint8_t center_x;
+} SpriteActor;
+
+SpriteActor sprite_actors[2];
+// TODO: Make current sprite walk off, and new sprite walk on every hour
 
 static uint8_t sprite_x, sprite_y;
 static uint8_t current_sprite = MarioSmall_Stand;
@@ -109,18 +135,43 @@ static void generate_backgrounds() {
     GBC_Graphics_lcdc_set_bg_layer_enabled(s_gbc_graphics, 3, false);
 }
 
-static void load_sprite(uint8_t *sprite, uint8_t sprite_index, uint8_t x, uint8_t y) {
-    GBC_Graphics_oam_set_sprite(s_gbc_graphics, sprite_index, x, y, sprite[2], sprite[3], sprite[4], sprite[5], sprite[6], sprite[7]);
+static void initialize_sprite_actor(SpriteActor *sprite_actor, uint8_t sprite_index) {
+    GRect bounds = GBC_Graphics_get_screen_bounds(s_gbc_graphics);
+
+    uint8_t sprite_num = ((rand() % TOTAL_SPRITES) / FRAMES_PER_SPRITE) * FRAMES_PER_SPRITE;
+    uint8_t *sprite_data = SPRITE_DATA[sprite_num];
+    sprite_actor->base_sprite = sprite_num;
+    sprite_actor->sprite_index = sprite_index;
+    sprite_actor->width = GBC_TILE_WIDTH << sprite_data[4];
+    sprite_actor->height = GBC_TILE_HEIGHT << sprite_data[5];
+    sprite_actor->center_x = (bounds.size.w / 2) - sprite_actor->width / 2 + GBC_SPRITE_OFFSET_X;
+    sprite_actor->x = GBC_SPRITE_OFFSET_X - sprite_actor->width;
+    sprite_actor->y = SPRITE_BOTTOM_Y - sprite_actor->height + GBC_SPRITE_OFFSET_Y - SCREEN_Y_OFFSET;
 }
 
-static void generate_sprite(uint8_t sprite_num) {
-    uint8_t *sprite = SPRITE_DATA[sprite_num];
-    GBC_Graphics_lcdc_set_sprite_layer_z(s_gbc_graphics, NUM_BACKGROUNDS-1);
+static void render_sprite_actor(SpriteActor *sprite_actor) {
+    uint8_t sprite_data_pos = sprite_actor->base_sprite + sprite_actor->walk_frame;
+    GBC_Graphics_oam_set_sprite(s_gbc_graphics,
+                                sprite_actor->sprite_index,
+                                sprite_actor->x,
+                                sprite_actor->y,
+                                SPRITE_DATA[sprite_data_pos][2],
+                                SPRITE_DATA[sprite_data_pos][3],
+                                SPRITE_DATA[sprite_data_pos][4],
+                                SPRITE_DATA[sprite_data_pos][5],
+                                0,
+                                0);
+}
 
-    GRect bounds = GBC_Graphics_get_screen_bounds(s_gbc_graphics);
-    sprite_x = (bounds.size.w / 2) - (GBC_TILE_WIDTH << sprite[4]) / 2 + GBC_SPRITE_OFFSET_X;
-    sprite_y = SPRITE_BOTTOM_Y - (GBC_TILE_HEIGHT << sprite[5]) + GBC_SPRITE_OFFSET_Y - SCREEN_Y_OFFSET;
-    load_sprite(sprite, 0, sprite_x, sprite_y);
+static void generate_sprites() {
+    initialize_sprite_actor(&sprite_actors[0], 0);
+    initialize_sprite_actor(&sprite_actors[1], 1);
+
+    sprite_actors[0].x = sprite_actors[0].center_x + sprite_actors[0].width;
+    sprite_actors[1].x = sprite_actors[1].center_x - sprite_actors[1].width;
+
+    render_sprite_actor(&sprite_actors[0]);
+    render_sprite_actor(&sprite_actors[1]);
 }
 
 static void step() {
@@ -132,8 +183,10 @@ static void step() {
     load_time();
 
     // Redraw sprite
-    current_sprite = (current_sprite + 1) % 28;
-    generate_sprite(current_sprite);
+    sprite_actors[0].walk_frame = (sprite_actors[0].walk_frame + 1) % FRAMES_PER_SPRITE;
+    sprite_actors[1].walk_frame = (sprite_actors[1].walk_frame + 1) % FRAMES_PER_SPRITE;
+    render_sprite_actor(&sprite_actors[0]);
+    render_sprite_actor(&sprite_actors[1]);
 
     GBC_Graphics_render(s_gbc_graphics);
 }
@@ -173,7 +226,7 @@ static void window_load(Window *window) {
     create_palettes();
     generate_backgrounds();
     GBC_Graphics_lcdc_set_sprite_layer_z(s_gbc_graphics, NUM_BACKGROUNDS-1);
-    generate_sprite(current_sprite);
+    generate_sprites();
 
     // Setup the frame timer that will call the game step function
     // s_frame_timer = app_timer_register(FRAME_DURATION, frame_timer_handle, NULL);
