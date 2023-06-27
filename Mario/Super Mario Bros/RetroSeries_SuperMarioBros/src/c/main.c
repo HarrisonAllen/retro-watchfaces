@@ -20,22 +20,17 @@
 #define FRAMES_PER_SPRITE 4
 #define WALK_FRAMES FRAMES_PER_SPRITE - 1
 #define TOTAL_SPRITES 28
+#define NUM_SPRITE_ACTORS 2
 
-#define FRAME_DURATION 100
-
-static Window *s_window;
-static GBC_Graphics *s_gbc_graphics;
-static AppTimer *s_frame_timer;
+#define FRAME_DURATION 125
 
 typedef enum {
     AS_WALK_ON,
-    AS_STAND,
     AS_WALK,
     AS_WALK_OFF,
     AS_OFFSCREEN
 } ActorState;
 
-// TODO: Make a sprite data structure
 typedef struct {
     uint8_t sprite_index;
     uint8_t x;
@@ -45,13 +40,16 @@ typedef struct {
     uint8_t base_sprite;
     uint8_t walk_frame;
     uint8_t center_x;
+    ActorState state;
 } SpriteActor;
 
-SpriteActor sprite_actors[2];
-// TODO: Make current sprite walk off, and new sprite walk on every hour
 
-static uint8_t sprite_x, sprite_y;
-static uint8_t current_sprite = MarioSmall_Stand;
+static Window *s_window;
+static GBC_Graphics *s_gbc_graphics;
+static AppTimer *s_frame_timer;
+SpriteActor sprite_actors[NUM_SPRITE_ACTORS];
+
+static bool changing_sprites = false;
 
 static void load_tilesheet(uint32_t tilesheet_resource_id, uint8_t tilesheet_start_offset, uint8_t vram_start_offset, uint8_t vram_bank) {
     // Calculate how many tiles are on the tilesheet
@@ -147,6 +145,7 @@ static void initialize_sprite_actor(SpriteActor *sprite_actor, uint8_t sprite_in
     sprite_actor->center_x = (bounds.size.w / 2) - sprite_actor->width / 2 + GBC_SPRITE_OFFSET_X;
     sprite_actor->x = GBC_SPRITE_OFFSET_X - sprite_actor->width;
     sprite_actor->y = SPRITE_BOTTOM_Y - sprite_actor->height + GBC_SPRITE_OFFSET_Y - SCREEN_Y_OFFSET;
+    sprite_actor->state = AS_OFFSCREEN;
 }
 
 static void render_sprite_actor(SpriteActor *sprite_actor) {
@@ -161,43 +160,112 @@ static void render_sprite_actor(SpriteActor *sprite_actor) {
                                 SPRITE_DATA[sprite_data_pos][5],
                                 0,
                                 0);
+    GBC_Graphics_oam_set_sprite_hidden(s_gbc_graphics, sprite_actor->sprite_index, sprite_actor->state == AS_OFFSCREEN);
 }
 
-static void generate_sprites() {
-    initialize_sprite_actor(&sprite_actors[0], 0);
-    initialize_sprite_actor(&sprite_actors[1], 1);
+static void render_sprites() {
+    for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
+        render_sprite_actor(&sprite_actors[i]);
+    }
+}
 
-    sprite_actors[0].x = sprite_actors[0].center_x + sprite_actors[0].width;
-    sprite_actors[1].x = sprite_actors[1].center_x - sprite_actors[1].width;
-
-    render_sprite_actor(&sprite_actors[0]);
-    render_sprite_actor(&sprite_actors[1]);
+static void sprite_actor_take_step(SpriteActor *sprite_actor) {
+    sprite_actor->walk_frame = sprite_actor->walk_frame + 1;
+    if (sprite_actor->walk_frame > WALK_FRAMES) {
+        sprite_actor->walk_frame = 1;
+    }
 }
 
 static void step() {
-    // Scroll backgrounds
-    GBC_Graphics_bg_move(s_gbc_graphics, 0, 1, 0);
-    GBC_Graphics_bg_move(s_gbc_graphics, 1, 2, 0);
+    GRect bounds = GBC_Graphics_get_screen_bounds(s_gbc_graphics);
+    if (!changing_sprites) {
+        // Scroll backgrounds
+        GBC_Graphics_bg_move(s_gbc_graphics, 0, 1, 0);
+        GBC_Graphics_bg_move(s_gbc_graphics, 1, 2, 0);
+    }
 
     // Update time
     load_time();
 
-    // Redraw sprite
-    sprite_actors[0].walk_frame = (sprite_actors[0].walk_frame + 1) % FRAMES_PER_SPRITE;
-    sprite_actors[1].walk_frame = (sprite_actors[1].walk_frame + 1) % FRAMES_PER_SPRITE;
-    render_sprite_actor(&sprite_actors[0]);
-    render_sprite_actor(&sprite_actors[1]);
-
+    if (!changing_sprites) { // Walk in place
+        for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
+            if (sprite_actors[i].state == AS_WALK) {
+                sprite_actor_take_step(&sprite_actors[i]);
+                render_sprite_actor(&sprite_actors[i]);
+            }
+        }
+    } else { // Move sprites
+        for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
+            if (sprite_actors[i].state == AS_WALK_ON) {
+                sprite_actors[i].x += 4;
+                if (sprite_actors[i].x >= sprite_actors[i].center_x) {
+                    sprite_actors[i].x = sprite_actors[i].center_x;
+                    sprite_actors[i].walk_frame = 0;
+                    sprite_actors[i].state = AS_WALK;
+                }
+                sprite_actor_take_step(&sprite_actors[i]);
+                render_sprite_actor(&sprite_actors[i]);
+            } else if (sprite_actors[i].state == AS_WALK_OFF) {
+                sprite_actors[i].x += 4;
+                if (sprite_actors[i].x >= bounds.size.w + GBC_SPRITE_OFFSET_X) {
+                    initialize_sprite_actor(&sprite_actors[i], i);
+                } else {
+                    sprite_actor_take_step(&sprite_actors[i]);
+                }
+                render_sprite_actor(&sprite_actors[i]);
+            }
+        }
+    }
     GBC_Graphics_render(s_gbc_graphics);
 }
 
-static void time_handler(struct tm *tick_time, TimeUnits units_changed) {
+static void frame_timer_handle(void* context) {
     step();
+
+    changing_sprites = false;
+    for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
+        if (sprite_actors[i].state == AS_WALK_ON || sprite_actors[i].state == AS_WALK_OFF) {
+            changing_sprites = true;
+            break;
+        }
+    }
+    if (!changing_sprites) {
+        s_frame_timer = NULL;
+    } else {
+        s_frame_timer = app_timer_register(FRAME_DURATION, frame_timer_handle, NULL);
+    }
 }
 
-static void frame_timer_handle(void* context) {
+static void start_changing_sprites() {
+    changing_sprites = true;
     s_frame_timer = app_timer_register(FRAME_DURATION, frame_timer_handle, NULL);
-    step();
+}
+
+static void generate_sprites() {
+    for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
+        initialize_sprite_actor(&sprite_actors[i], i);
+    }
+
+    sprite_actors[0].state = AS_WALK_ON;
+
+    render_sprites();
+    start_changing_sprites();
+}
+
+static void time_handler(struct tm *tick_time, TimeUnits units_changed) {
+    if (!changing_sprites) {
+        if (tick_time->tm_min == 0) {
+            for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
+                if (sprite_actors[i].state == AS_OFFSCREEN) {
+                    sprite_actors[i].state = AS_WALK_ON;
+                } else if (sprite_actors[i].state == AS_WALK) {
+                    sprite_actors[i].state = AS_WALK_OFF;
+                }
+            }
+            start_changing_sprites();
+        }
+        step();
+    }
 }
 
 static void will_focus_handler(bool in_focus) {
@@ -233,7 +301,7 @@ static void window_load(Window *window) {
     app_focus_service_subscribe(will_focus_handler);
 
     // Setup time
-    tick_timer_service_subscribe(SECOND_UNIT, time_handler);
+    tick_timer_service_subscribe(MINUTE_UNIT, time_handler);
 
     // Display the graphics
     GBC_Graphics_render(s_gbc_graphics);
