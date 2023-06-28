@@ -4,8 +4,8 @@
 #include "resources/Sprites.h"
 #include "pebble-gbc-graphics-advanced/pebble-gbc-graphics-advanced.h"
 
-#define NUM_VRAMS 2
-#define NUM_BACKGROUNDS 4
+#define NUM_VRAMS 1
+#define NUM_BACKGROUNDS 3
 #define SCREEN_WIDTH 184
 #define SCREEN_HEIGHT 184
 #define SCREEN_X_OFFSET (SCREEN_WIDTH - PBL_DISPLAY_WIDTH) / 2
@@ -128,9 +128,6 @@ static void generate_backgrounds() {
     }
     GBC_Graphics_bg_set_scroll_pos(s_gbc_graphics, TIME_LAYER, SCREEN_X_OFFSET, SCREEN_Y_OFFSET + TIME_Y_SHIFT);
     load_time();
-
-    // Hide BG 3
-    GBC_Graphics_lcdc_set_bg_layer_enabled(s_gbc_graphics, 3, false);
 }
 
 static void initialize_sprite_actor(SpriteActor *sprite_actor, uint8_t sprite_index) {
@@ -254,7 +251,7 @@ static void generate_sprites() {
 
 static void time_handler(struct tm *tick_time, TimeUnits units_changed) {
     if (!changing_sprites) {
-        if (tick_time->tm_min == 0) {
+        if (tick_time->tm_sec == 0) {
             for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
                 if (sprite_actors[i].state == AS_OFFSCREEN) {
                     sprite_actors[i].state = AS_WALK_ON;
@@ -289,8 +286,7 @@ static void window_load(Window *window) {
 
     GBC_Graphics_set_screen_bounds(s_gbc_graphics, GBC_SCREEN_BOUNDS_FULL);
 
-    load_tilesheet(RESOURCE_ID_DATA_BG_TILESHEET, 0, 0, 0);
-    load_tilesheet(RESOURCE_ID_DATA_SPRITE_TILESHEET, 0, 0, 1);
+    load_tilesheet(RESOURCE_ID_DATA_TILESHEET, 0, 0, 0);
     create_palettes();
     generate_backgrounds();
     GBC_Graphics_lcdc_set_sprite_layer_z(s_gbc_graphics, NUM_BACKGROUNDS-1);
@@ -301,7 +297,7 @@ static void window_load(Window *window) {
     app_focus_service_subscribe(will_focus_handler);
 
     // Setup time
-    tick_timer_service_subscribe(MINUTE_UNIT, time_handler);
+    tick_timer_service_subscribe(SECOND_UNIT, time_handler);
 
     // Display the graphics
     GBC_Graphics_render(s_gbc_graphics);
@@ -319,7 +315,7 @@ static void init(void) {
         .load = window_load,
         .unload = window_unload,
     });
-    const bool animated = true;
+    const bool animated = false;
     window_stack_push(s_window, animated);
 }
 

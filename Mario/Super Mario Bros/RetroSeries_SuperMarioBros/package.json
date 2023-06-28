@@ -1,6 +1,6 @@
 {
   "name": "RetroSeries_SuperMarioBros",
-  "author": "MakeAwesomeHappen",
+  "author": "Harrison Allen",
   "version": "1.0.0",
   "keywords": ["pebble-app"],
   "private": true,
@@ -17,7 +17,7 @@
       "diorite"
     ],
     "watchapp": {
-      "watchface": false
+      "watchface": true
     },
     "messageKeys": [
       "dummy"
@@ -26,13 +26,8 @@
       "media": [
         {
           "type": "raw",
-          "name": "DATA_BG_TILESHEET",
-          "file": "data/BG_Tilesheet.bin"
-        },
-        {
-          "type": "raw",
-          "name": "DATA_SPRITE_TILESHEET",
-          "file": "data/Sprite_Tilesheet.bin"
+          "name": "DATA_TILESHEET",
+          "file": "data/Tilesheet.bin"
         },
         {
           "type": "raw",
