@@ -199,8 +199,9 @@ static void step() {
                     sprite_actors[i].x = sprite_actors[i].center_x;
                     sprite_actors[i].walk_frame = 0;
                     sprite_actors[i].state = AS_WALK;
+                } else {
+                    sprite_actor_take_step(&sprite_actors[i]);
                 }
-                sprite_actor_take_step(&sprite_actors[i]);
                 render_sprite_actor(&sprite_actors[i]);
             } else if (sprite_actors[i].state == AS_WALK_OFF) {
                 sprite_actors[i].x += 4;
@@ -251,7 +252,7 @@ static void generate_sprites() {
 
 static void time_handler(struct tm *tick_time, TimeUnits units_changed) {
     if (!changing_sprites) {
-        if (tick_time->tm_sec == 0) {
+        if (tick_time->tm_min == 0) {
             for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
                 if (sprite_actors[i].state == AS_OFFSCREEN) {
                     sprite_actors[i].state = AS_WALK_ON;
@@ -297,7 +298,7 @@ static void window_load(Window *window) {
     app_focus_service_subscribe(will_focus_handler);
 
     // Setup time
-    tick_timer_service_subscribe(SECOND_UNIT, time_handler);
+    tick_timer_service_subscribe(MINUTE_UNIT, time_handler);
 
     // Display the graphics
     GBC_Graphics_render(s_gbc_graphics);
