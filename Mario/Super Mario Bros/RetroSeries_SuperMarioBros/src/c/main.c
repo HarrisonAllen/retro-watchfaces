@@ -316,7 +316,7 @@ static void init(void) {
         .load = window_load,
         .unload = window_unload,
     });
-    const bool animated = false;
+    const bool animated = true;
     window_stack_push(s_window, animated);
 }
 

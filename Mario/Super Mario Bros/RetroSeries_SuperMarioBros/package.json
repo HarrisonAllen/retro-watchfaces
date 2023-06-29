@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {},
   "pebble": {
-    "displayName": "Super Mario Bros. - Retro Series",
+    "displayName": "Super Mario Bros Retro Series",
     "uuid": "20bd91a3-6bde-4867-9d44-11075e855ff1",
     "sdkVersion": "3",
     "enableMultiJS": true,
