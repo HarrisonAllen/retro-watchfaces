@@ -1,0 +1,8 @@
+{
+    "watchfaceName": "test-watchface",
+    "watchfaceAuthor": "Harrison Allen",
+    "watchfaceDisplayName": "Test Watchface",
+    "uuid": "8c75a5ab-fc73-46c1-b13f-e24c267a15f9",
+    "timeYTileOffset": 6,
+    "timeYShift": 4
+}

@@ -1,0 +1,101 @@
+{
+    "name": "test-watchface",
+    "author": "Harrison Allen",
+    "version": "1.0.0",
+    "keywords": [
+        "pebble-app"
+    ],
+    "private": true,
+    "dependencies": {},
+    "pebble": {
+        "displayName": "Test Watchface",
+        "uuid": "8c75a5ab-fc73-46c1-b13f-e24c267a15f9",
+        "sdkVersion": "3",
+        "enableMultiJS": true,
+        "targetPlatforms": [
+            "basalt",
+            "chalk",
+            "diorite"
+        ],
+        "watchapp": {
+            "watchface": true
+        },
+        "messageKeys": [
+            "dummy"
+        ],
+        "resources": {
+            "media": [
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_1_TILESHEET",
+                    "file": "data/backgrounds/World1_1/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_1_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/World1_1/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_1_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/World1_1/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_1_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/World1_1/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_1_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/World1_1/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_1_PALETTES",
+                    "file": "data/backgrounds/World1_1/Palettes.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_1_NUMBERMAPS",
+                    "file": "data/backgrounds/World1_1/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_2_TILESHEET",
+                    "file": "data/backgrounds/World1_2/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_2_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/World1_2/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_2_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/World1_2/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_2_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/World1_2/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_2_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/World1_2/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_2_PALETTES",
+                    "file": "data/backgrounds/World1_2/Palettes.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WORLD1_2_NUMBERMAPS",
+                    "file": "data/backgrounds/World1_2/NumberMaps.bin"
+                }
+            ]
+        }
+    }
+}
