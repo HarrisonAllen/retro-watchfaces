@@ -26,6 +26,7 @@ static void load_World1_1(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) {
     load_resource(gbc_graphics, RESOURCE_ID_DATA_WORLD1_1_NUMBERMAPS, numbers_buffer);
 }
 
+
 static void load_World1_2(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) {
     // Load World1_2 tilesheet
     load_tilesheet(gbc_graphics, RESOURCE_ID_DATA_WORLD1_2_TILESHEET, 0, 0, 0);
@@ -46,6 +47,7 @@ static void load_World1_2(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) {
     // Load World1_2 numbers
     load_resource(gbc_graphics, RESOURCE_ID_DATA_WORLD1_2_NUMBERMAPS, numbers_buffer);
 }
+
 #define NUM_BACKGROUND_GROUPS 2
 
 void (*LOAD_BACKGROUND_GROUP[2])(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) = {

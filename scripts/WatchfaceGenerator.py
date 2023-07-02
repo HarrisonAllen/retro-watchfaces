@@ -1,7 +1,8 @@
+import math
 import os
 import sys
 import glob
-from Templates import BACKGROUND_TEMPLATE, RESOURCE_TEMPLATE
+from Templates import BACKGROUND_TEMPLATE, SPRITE_TEMPLATE, RESOURCE_TEMPLATE
 from PIL import Image, ImageDraw
 from distutils.dir_util import copy_tree
 import shutil
@@ -97,7 +98,6 @@ def extract_palettes_from_images(images):
                 if len(image_colors | palette) <= COLORS_PER_PALETTE:
                     palette |= image_colors
                     break
-
         return [sorted(list(p)) for p in palettes]
 
     
@@ -252,6 +252,64 @@ def add_loader_info_to_backgrounds_h(backgrounds_h_filename, background_groups):
     loader_info += "};\n"
     with open(backgrounds_h_filename, "a") as backgrounds_h_file:
         backgrounds_h_file.write(loader_info)
+        
+def extract_sprite_and_tiles(image_filename, tiles, sprites):
+    image = Image.open(image_filename)
+    dims = image.size
+
+    sprites.append([
+        os.path.splitext(os.path.basename(image_filename))[0], 
+        len(tiles), 
+        # width = TILE_SIZE * (2 ** sprite_width)
+        # (width / tile_size) = 2 ** sprite_width
+        # log2(width / tile_size) == sprite_width
+        round(math.log2(dims[0] // TILE_WIDTH)), 
+        round(math.log2(dims[1] // TILE_HEIGHT))
+    ])
+    
+    for y in range(0, dims[1], TILE_HEIGHT):
+        for x in range(0, dims[0], TILE_WIDTH):
+            tile = image.crop((x, y, x + TILE_WIDTH, y + TILE_HEIGHT))
+            tiles.append(tile)
+    
+    return tiles, sprites
+
+def add_resource_to_sprites_h(sprites_h_filename, sprite_group, num_sprites):
+    with open(sprites_h_filename, "a") as sprites_h_file:
+        uppercase_sprite_group = sprite_group.upper()
+        sprite_loader = SPRITE_TEMPLATE.format(**locals())
+        sprites_h_file.write(sprite_loader)
+        
+def add_loader_info_to_sprites_h(sprites_h_filename, sprite_groups):
+    loader_info = f"#define NUM_SPRITE_GROUPS {len(sprite_groups)}\n\n"
+    loader_info += f"uint16_t (*LOAD_SPRITE_GROUP[{len(sprite_groups)}])(GBC_Graphics *gbc_graphics, uint8_t vram_bank, uint8_t vram_start_offset, uint8_t palette_num, uint8_t *num_sprites, uint8_t **sprite_data) = {{\n"
+    for sprite_group in sprite_groups:
+        loader_info += f"    load_{sprite_group},\n"
+    loader_info += "};\n"
+    with open(sprites_h_filename, "a") as sprites_h_file:
+        sprites_h_file.write(loader_info)
+
+def add_sprite_data_structure_to_sprites_h(sprites_h_filename, sprites, sprite_group):
+    sprite_defines = ""
+    for i in range(len(sprites)):
+        sprite = sprites[i]
+        sprite_defines += f"#define {sprite_group.upper()}_{sprite[0].upper()} {i}\n"
+    sprite_defines += "\n"
+    
+    with open(sprites_h_filename, "a") as sprites_h_file:
+        sprites_h_file.write(sprite_defines)
+        
+
+    sprite_data_structure = f"uint8_t {sprite_group.upper()}_DATA[] = {{\n"
+        # e.g.MarioBig_Walk = {tile, width, height}
+    sprite_data_structure += "    // vram tile start, width, height\n"
+    for i in range(len(sprites)):
+        sprite = sprites[i]
+        sprite_data_structure += f"    {sprite[1]}, {sprite[2]}, {sprite[3]}, // {sprite[0]}\n"
+    sprite_data_structure += "};\n"
+
+    with open(sprites_h_filename, "a") as sprites_h_file:
+        sprites_h_file.write(sprite_data_structure)
 
 def convert(directory):
     # Load config
@@ -351,7 +409,7 @@ def convert(directory):
         write_palettes_to_file(background_group_palettes, os.path.join(background_group_data_directory, "Palettes.bin"))
         save_palettes_as_image(background_group_palettes, os.path.join(background_group_reference_directory, "Palettes.png"))
 
-        # Modify package to import reference images
+        # Modify package to import data files
         print("    Updating package...")
         with open(package_filename) as package_file:
             package = json.load(package_file)
@@ -371,27 +429,76 @@ def convert(directory):
         background_groups.append(background_group_name)
     
     add_loader_info_to_backgrounds_h(backgrounds_h_filename, background_groups)
-        
+    print("Backgrounds complete!")
 
     # Now do sprites in a similar fashion
     print("Processing sprites...")
     sprite_directory = os.path.join(directory, "Sprites")
     sprite_group_directories = glob.iglob(os.path.join(sprite_directory, "*"))
-    for sgd in sprite_group_directories:
-        print(sgd)
+    sprites_h_filename = os.path.join(watchface_directory, "src", "c", "resources", "Sprites.h")
+    sprite_groups = []
+    sprite_nums = []
+    for sprite_group_directory in sprite_group_directories:
+        sprite_group_name = os.path.basename(sprite_group_directory)
+        print(f"Processing {sprite_group_name}...")
 
-        
+        sprite_image_filenames = glob.iglob(os.path.join(sprite_group_directory, "*"))
+        sprite_images = [Image.open(image_filename) for image_filename in sprite_image_filenames]
+        sprite_group_palettes = extract_palettes_from_images(sprite_images)
+        sprite_group_image_palettes = assign_palettes_to_images(sprite_images, sprite_group_palettes)
+
+        print("    Extracting tiles, sprites, and palettes...")
+        sprite_num = 0
+        sprite_group_tiles = []
+        sprite_group_sprites = []
+        sprite_group_palettes_assignments = []
+        sprite_image_filenames = glob.iglob(os.path.join(sprite_group_directory, "*"))
+        for sprite_image_filename in sprite_image_filenames:
+            extract_sprite_and_tiles(sprite_image_filename, sprite_group_tiles, sprite_group_sprites)
+            for i in range((2 ** sprite_group_sprites[-1][2]) * (2 ** sprite_group_sprites[-1][3])):
+                sprite_group_palettes_assignments.append(sprite_group_image_palettes[sprite_num])
+            sprite_num += 1
+
+        # Generate tilesheet
+        print("    Generating tilesheet...")
+        sprite_group_tilesheet = generate_tilesheet(sprite_group_tiles, sprite_group_palettes, sprite_group_palettes_assignments)
+
+        # Export data files
+        print("    Exporting data files...")
+        sprite_group_data_subdirectory = f"data/sprite/{sprite_group_name}"
+        sprite_group_data_directory = os.path.join(watchface_directory, "resources", sprite_group_data_subdirectory)
+        os.makedirs(sprite_group_data_directory)
+        sprite_group_reference_directory = os.path.join(output_reference_directory, sprite_group_name)
+        os.makedirs(sprite_group_reference_directory)
+
+        # Export tilesheet
+        write_tilesheet_to_file(sprite_group_tilesheet, os.path.join(sprite_group_data_directory, "Tilesheet.bin"))
+        save_tilesheet_as_image(sprite_group_tiles, os.path.join(sprite_group_reference_directory, "Tilesheet.png"))
+
+        # Export palettes
+        write_palettes_to_file(sprite_group_palettes, os.path.join(sprite_group_data_directory, "Palettes.bin"))
+        save_palettes_as_image(sprite_group_palettes, os.path.join(sprite_group_reference_directory, "Palettes.png"))
+
+        # Modify package to import data files
+        print("    Updating package...")
+        with open(package_filename) as package_file:
+            package = json.load(package_file)
+        with open(package_filename, "w") as package_file:
+            add_resource_to_package(package, sprite_group_data_subdirectory, [sprite_group_name, "Tilesheet", ".bin"])
+            add_resource_to_package(package, sprite_group_data_subdirectory, [sprite_group_name, "Palettes", ".bin"])
+            json.dump(package, package_file, indent=4)
+
+        print("    Updating Sprites.h...")
+        # Add sprite data structure
+        add_sprite_data_structure_to_sprites_h(sprites_h_filename, sprite_group_sprites, sprite_group_name)
+
+        # Add sprite loader function
+        add_resource_to_sprites_h(sprites_h_filename, sprite_group_name, sprite_num)
+        sprite_groups.append(sprite_group_name)
 
 
-    # append to the backgrounds file
-    # Also generate numbers file
-    # All of these go into binary files
-    
-    # Then do sprites
-    # Walk through each sprite group in backgrounds
-    # However, try to use one palette for sprite groups (so a max of 8 sprite groups?)
-    # That way you can load in a sprite and specify vram, offset, etc.
-    # For this one, we'll store in a .h instead of binaries
+    add_loader_info_to_sprites_h(sprites_h_filename, sprite_groups)
+
 
 if __name__ == "__main__":
     convert(sys.argv[1])

@@ -3,7 +3,7 @@
 #include <pebble.h>
 #include "../pebble-gbc-graphics-advanced/pebble-gbc-graphics-advanced.h"
 
-static void load_tilesheet(GBC_Graphics *gbc_graphics, uint32_t tilesheet_resource_id, uint8_t tilesheet_start_offset, uint8_t vram_start_offset, uint8_t vram_bank) {
+static uint16_t load_tilesheet(GBC_Graphics *gbc_graphics, uint32_t tilesheet_resource_id, uint8_t tilesheet_start_offset, uint8_t vram_start_offset, uint8_t vram_bank) {
     // Calculate how many tiles are on the tilesheet
     ResHandle handle = resource_get_handle(tilesheet_resource_id);
     size_t res_size = resource_size(handle);
@@ -11,6 +11,7 @@ static void load_tilesheet(GBC_Graphics *gbc_graphics, uint32_t tilesheet_resour
 
     GBC_Graphics_load_from_tilesheet_into_vram(gbc_graphics, tilesheet_resource_id, tilesheet_start_offset, 
                                                 tiles_to_load, vram_start_offset, vram_bank);
+    return tiles_to_load;
 }
 
 static void load_map(GBC_Graphics *gbc_graphics, uint32_t map_resource_id, uint8_t *target_map) {

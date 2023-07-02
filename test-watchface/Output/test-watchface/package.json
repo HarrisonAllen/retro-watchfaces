@@ -94,6 +94,76 @@
                     "type": "raw",
                     "name": "DATA_WORLD1_2_NUMBERMAPS",
                     "file": "data/backgrounds/World1_2/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_LUIGIBIG_TILESHEET",
+                    "file": "data/sprite/LuigiBig/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_LUIGIBIG_PALETTES",
+                    "file": "data/sprite/LuigiBig/Palettes.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_LUIGIFIRE_TILESHEET",
+                    "file": "data/sprite/LuigiFire/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_LUIGIFIRE_PALETTES",
+                    "file": "data/sprite/LuigiFire/Palettes.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_LUIGISMALL_TILESHEET",
+                    "file": "data/sprite/LuigiSmall/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_LUIGISMALL_PALETTES",
+                    "file": "data/sprite/LuigiSmall/Palettes.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIOBIG_TILESHEET",
+                    "file": "data/sprite/MarioBig/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIOBIG_PALETTES",
+                    "file": "data/sprite/MarioBig/Palettes.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIOFIRE_TILESHEET",
+                    "file": "data/sprite/MarioFire/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIOFIRE_PALETTES",
+                    "file": "data/sprite/MarioFire/Palettes.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIOSMALL_TILESHEET",
+                    "file": "data/sprite/MarioSmall/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIOSMALL_PALETTES",
+                    "file": "data/sprite/MarioSmall/Palettes.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIOWEIRD_TILESHEET",
+                    "file": "data/sprite/MarioWeird/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIOWEIRD_PALETTES",
+                    "file": "data/sprite/MarioWeird/Palettes.bin"
                 }
             ]
         }

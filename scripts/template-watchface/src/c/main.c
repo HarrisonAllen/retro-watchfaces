@@ -23,6 +23,8 @@
 #define NUMBER_WIDTH 3
 #define TOTAL_NUMBERS 11
 
+#define SPRITE_BOTTOM_Y 152
+
 #define FRAME_DURATION 125 // In ms
 
 static Window *s_window;
@@ -95,6 +97,28 @@ static void generate_backgrounds() {
 //     sprite_actor->y = SPRITE_BOTTOM_Y - sprite_actor->height + GBC_SPRITE_OFFSET_Y - SCREEN_Y_OFFSET;
 //     sprite_actor->state = AS_OFFSCREEN;
 // }
+
+static void initialize_sprites() {
+    uint8_t num_sprites;
+    uint8_t vram_bank = 1;
+    uint8_t *sprite_data;
+    (*LOAD_SPRITE_GROUP[rand() % NUM_SPRITE_GROUPS])(s_gbc_graphics, vram_bank, 0, 0, &num_sprites, &sprite_data);
+    uint8_t sprite_frame = rand() % num_sprites;
+    sprite_data += sprite_frame * SPRITE_DATA_SIZE;
+
+    GRect bounds = GBC_Graphics_get_screen_bounds(s_gbc_graphics);
+    GBC_Graphics_oam_set_sprite(s_gbc_graphics,
+                                0,
+                                (bounds.size.w / 2) - (GBC_TILE_WIDTH << sprite_data[1]) + GBC_SPRITE_OFFSET_X,
+                                SPRITE_BOTTOM_Y - (GBC_TILE_HEIGHT << sprite_data[2]) + GBC_SPRITE_OFFSET_Y - SCREEN_Y_OFFSET,
+                                sprite_data[0],
+                                GBC_Graphics_attr_make(0, vram_bank, false, false, false),
+                                sprite_data[1],
+                                sprite_data[2],
+                                0,
+                                0);
+}
+
 
 // static void render_sprite_actor(SpriteActor *sprite_actor) {
 //     uint8_t sprite_data_pos = sprite_actor->base_sprite + sprite_actor->walk_frame;
@@ -243,6 +267,7 @@ static void window_load(Window *window) {
 
     generate_backgrounds();
     GBC_Graphics_lcdc_set_sprite_layer_z(s_gbc_graphics, NUM_BACKGROUNDS-1);
+    initialize_sprites();
     // generate_sprites();
 
     // Setup the frame timer that will call the game step function
