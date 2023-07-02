@@ -27,6 +27,36 @@
             "media": [
                 {
                     "type": "raw",
+                    "name": "DATA_SUPERMARIOWORLD_TILESHEET",
+                    "file": "data/backgrounds/SuperMarioWorld/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_SUPERMARIOWORLD_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/SuperMarioWorld/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_SUPERMARIOWORLD_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/SuperMarioWorld/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_SUPERMARIOWORLD_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/SuperMarioWorld/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_SUPERMARIOWORLD_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/SuperMarioWorld/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_SUPERMARIOWORLD_NUMBERMAPS",
+                    "file": "data/backgrounds/SuperMarioWorld/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
                     "name": "DATA_WORLD1_1_TILESHEET",
                     "file": "data/backgrounds/World1_1/Tilesheet.bin"
                 },
@@ -49,11 +79,6 @@
                     "type": "raw",
                     "name": "DATA_WORLD1_1_FOREGROUNDATTRMAP",
                     "file": "data/backgrounds/World1_1/ForegroundAttrmap.bin"
-                },
-                {
-                    "type": "raw",
-                    "name": "DATA_WORLD1_1_PALETTES",
-                    "file": "data/backgrounds/World1_1/Palettes.bin"
                 },
                 {
                     "type": "raw",
@@ -87,11 +112,6 @@
                 },
                 {
                     "type": "raw",
-                    "name": "DATA_WORLD1_2_PALETTES",
-                    "file": "data/backgrounds/World1_2/Palettes.bin"
-                },
-                {
-                    "type": "raw",
                     "name": "DATA_WORLD1_2_NUMBERMAPS",
                     "file": "data/backgrounds/World1_2/NumberMaps.bin"
                 },
@@ -102,18 +122,8 @@
                 },
                 {
                     "type": "raw",
-                    "name": "DATA_LUIGIBIG_PALETTES",
-                    "file": "data/sprite/LuigiBig/Palettes.bin"
-                },
-                {
-                    "type": "raw",
                     "name": "DATA_LUIGIFIRE_TILESHEET",
                     "file": "data/sprite/LuigiFire/Tilesheet.bin"
-                },
-                {
-                    "type": "raw",
-                    "name": "DATA_LUIGIFIRE_PALETTES",
-                    "file": "data/sprite/LuigiFire/Palettes.bin"
                 },
                 {
                     "type": "raw",
@@ -122,18 +132,8 @@
                 },
                 {
                     "type": "raw",
-                    "name": "DATA_LUIGISMALL_PALETTES",
-                    "file": "data/sprite/LuigiSmall/Palettes.bin"
-                },
-                {
-                    "type": "raw",
                     "name": "DATA_MARIOBIG_TILESHEET",
                     "file": "data/sprite/MarioBig/Tilesheet.bin"
-                },
-                {
-                    "type": "raw",
-                    "name": "DATA_MARIOBIG_PALETTES",
-                    "file": "data/sprite/MarioBig/Palettes.bin"
                 },
                 {
                     "type": "raw",
@@ -142,28 +142,13 @@
                 },
                 {
                     "type": "raw",
-                    "name": "DATA_MARIOFIRE_PALETTES",
-                    "file": "data/sprite/MarioFire/Palettes.bin"
-                },
-                {
-                    "type": "raw",
                     "name": "DATA_MARIOSMALL_TILESHEET",
                     "file": "data/sprite/MarioSmall/Tilesheet.bin"
                 },
                 {
                     "type": "raw",
-                    "name": "DATA_MARIOSMALL_PALETTES",
-                    "file": "data/sprite/MarioSmall/Palettes.bin"
-                },
-                {
-                    "type": "raw",
                     "name": "DATA_MARIOWEIRD_TILESHEET",
                     "file": "data/sprite/MarioWeird/Tilesheet.bin"
-                },
-                {
-                    "type": "raw",
-                    "name": "DATA_MARIOWEIRD_PALETTES",
-                    "file": "data/sprite/MarioWeird/Palettes.bin"
                 }
             ]
         }

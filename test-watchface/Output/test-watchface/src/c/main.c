@@ -101,7 +101,7 @@ static void generate_backgrounds() {
 static void initialize_sprites() {
     uint8_t num_sprites;
     uint8_t vram_bank = 1;
-    uint8_t *sprite_data;
+    const uint8_t *sprite_data;
     (*LOAD_SPRITE_GROUP[rand() % NUM_SPRITE_GROUPS])(s_gbc_graphics, vram_bank, 0, 0, &num_sprites, &sprite_data);
     uint8_t sprite_frame = rand() % num_sprites;
     sprite_data += sprite_frame * SPRITE_DATA_SIZE;

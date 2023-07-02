@@ -282,7 +282,7 @@ def add_resource_to_sprites_h(sprites_h_filename, sprite_group, num_sprites):
         
 def add_loader_info_to_sprites_h(sprites_h_filename, sprite_groups):
     loader_info = f"#define NUM_SPRITE_GROUPS {len(sprite_groups)}\n\n"
-    loader_info += f"uint16_t (*LOAD_SPRITE_GROUP[{len(sprite_groups)}])(GBC_Graphics *gbc_graphics, uint8_t vram_bank, uint8_t vram_start_offset, uint8_t palette_num, uint8_t *num_sprites, uint8_t **sprite_data) = {{\n"
+    loader_info += f"uint16_t (*LOAD_SPRITE_GROUP[{len(sprite_groups)}])(GBC_Graphics *gbc_graphics, uint8_t vram_bank, uint8_t vram_start_offset, uint8_t palette_num, uint8_t *num_sprites, const uint8_t **sprite_data) = {{\n"
     for sprite_group in sprite_groups:
         loader_info += f"    load_{sprite_group},\n"
     loader_info += "};\n"
@@ -299,8 +299,7 @@ def add_sprite_data_structure_to_sprites_h(sprites_h_filename, sprites, sprite_g
     with open(sprites_h_filename, "a") as sprites_h_file:
         sprites_h_file.write(sprite_defines)
         
-
-    sprite_data_structure = f"uint8_t {sprite_group.upper()}_DATA[] = {{\n"
+    sprite_data_structure = f"const uint8_t {sprite_group.upper()}_DATA[] = {{\n"
         # e.g.MarioBig_Walk = {tile, width, height}
     sprite_data_structure += "    // vram tile start, width, height\n"
     for i in range(len(sprites)):
@@ -310,6 +309,58 @@ def add_sprite_data_structure_to_sprites_h(sprites_h_filename, sprites, sprite_g
 
     with open(sprites_h_filename, "a") as sprites_h_file:
         sprites_h_file.write(sprite_data_structure)
+        
+def convert_rgba_to_pebble_color_string(color):
+    pebble_color = "0b11" # A
+    pebble_color += format(color[0] // 85, '02b') # R
+    pebble_color += format(color[1] // 85, '02b') # G
+    pebble_color += format(color[2] // 85, '02b') # B
+    return pebble_color
+
+def convert_rgba_to_bw_pebble_color_string(color):
+    color_sum = 0
+    color_sum += color[0] / 85 # R
+    color_sum += color[1] / 85 # G
+    color_sum += color[2] / 85 # B
+    color_average = round(color_sum / 3)
+    if color_average > 0:
+        color_average = min(color_average + 1, 0b11)
+    bw_pebble_color = '0b' + format(color_average, '02b')
+    return bw_pebble_color
+
+def add_palette_data_structure_to_palettes_h(palettes_h_filename, palettes, group_name, only_use_first_palette=False):
+    palette_data_structure = f"uint8_t {group_name.upper()}_PALETTES[][{COLORS_PER_PALETTE}] = {{\n"
+    palette_data_structure += f"#if defined(PBL_COLOR)\n"
+    for palette in palettes:
+        palette_data_structure += "    {"
+        for i in range(COLORS_PER_PALETTE):
+            if i >= len(palette):
+                color = (0, 0, 0, 0)
+            else:
+                color = palette[i]
+            palette_data_structure += f"{convert_rgba_to_pebble_color_string(color)}, "
+        palette_data_structure += "},\n"
+        if only_use_first_palette:
+            break
+
+    palette_data_structure += f"#else\n"
+    for palette in palettes:
+        palette_data_structure += "    {"
+        for i in range(COLORS_PER_PALETTE):
+            if i >= len(palette):
+                color = (0, 0, 0, 0)
+            else:
+                color = palette[i]
+            palette_data_structure += f"{convert_rgba_to_bw_pebble_color_string(color)}, "
+        palette_data_structure += "},\n"
+        if only_use_first_palette:
+            break
+
+    palette_data_structure += f"#endif\n"
+    palette_data_structure += "};\n\n"
+    
+    with open(palettes_h_filename, "a") as palettes_h_file:
+        palettes_h_file.write(palette_data_structure)
 
 def convert(directory):
     # Load config
@@ -332,6 +383,7 @@ def convert(directory):
     watchface_directory = os.path.join(output_directory, config['watchfaceName'])
     os.makedirs(watchface_directory)
     copy_tree("template-watchface", watchface_directory)
+    palettes_h_filename = os.path.join(watchface_directory, "src", "c", "resources", "Palettes.h")
 
     # Update package.json with config values
     print("Replacing package values with config values...")
@@ -365,7 +417,8 @@ def convert(directory):
         extract_tiles(background_filename, background_group_tiles, True)
         extract_tiles(foreground_filename, background_group_tiles, True)
         extract_tiles(numbers_filename, background_group_tiles, True)
-        print(f"    Extracted {len(background_group_tiles)} background tiles.")
+        print(f"        Extracted {len(background_group_tiles)} background tiles.")
+        assert len(background_group_tiles) <= 256, "    Too many tiles! Aborting..."
 
         # Extract and assign palettes
         print("    Extracting background palettes...")
@@ -406,7 +459,7 @@ def convert(directory):
         write_number_maps_to_file(number_maps, os.path.join(background_group_data_directory, "NumberMaps.bin"))
         
         # Export palettes
-        write_palettes_to_file(background_group_palettes, os.path.join(background_group_data_directory, "Palettes.bin"))
+        add_palette_data_structure_to_palettes_h(palettes_h_filename, background_group_palettes, background_group_name)
         save_palettes_as_image(background_group_palettes, os.path.join(background_group_reference_directory, "Palettes.png"))
 
         # Modify package to import data files
@@ -419,7 +472,6 @@ def convert(directory):
             add_resource_to_package(package, background_group_data_subdirectory, [background_group_name, "BackgroundAttrmap", ".bin"])
             add_resource_to_package(package, background_group_data_subdirectory, [background_group_name, "ForegroundTilemap", ".bin"])
             add_resource_to_package(package, background_group_data_subdirectory, [background_group_name, "ForegroundAttrmap", ".bin"])
-            add_resource_to_package(package, background_group_data_subdirectory, [background_group_name, "Palettes", ".bin"])
             add_resource_to_package(package, background_group_data_subdirectory, [background_group_name, "NumberMaps", ".bin"])
             json.dump(package, package_file, indent=4)
 
@@ -458,6 +510,8 @@ def convert(directory):
             for i in range((2 ** sprite_group_sprites[-1][2]) * (2 ** sprite_group_sprites[-1][3])):
                 sprite_group_palettes_assignments.append(sprite_group_image_palettes[sprite_num])
             sprite_num += 1
+        print(f"        Extracted {len(sprite_group_tiles)} sprite tiles.")
+        assert len(sprite_group_tiles) <= 256, "    Too many tiles! Aborting..."
 
         # Generate tilesheet
         print("    Generating tilesheet...")
@@ -476,7 +530,7 @@ def convert(directory):
         save_tilesheet_as_image(sprite_group_tiles, os.path.join(sprite_group_reference_directory, "Tilesheet.png"))
 
         # Export palettes
-        write_palettes_to_file(sprite_group_palettes, os.path.join(sprite_group_data_directory, "Palettes.bin"))
+        add_palette_data_structure_to_palettes_h(palettes_h_filename, sprite_group_palettes, sprite_group_name, only_use_first_palette=True)
         save_palettes_as_image(sprite_group_palettes, os.path.join(sprite_group_reference_directory, "Palettes.png"))
 
         # Modify package to import data files
@@ -485,7 +539,6 @@ def convert(directory):
             package = json.load(package_file)
         with open(package_filename, "w") as package_file:
             add_resource_to_package(package, sprite_group_data_subdirectory, [sprite_group_name, "Tilesheet", ".bin"])
-            add_resource_to_package(package, sprite_group_data_subdirectory, [sprite_group_name, "Palettes", ".bin"])
             json.dump(package, package_file, indent=4)
 
         print("    Updating Sprites.h...")
