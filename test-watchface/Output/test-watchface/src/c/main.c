@@ -102,7 +102,6 @@ static void step() {
                 sprite_actors[i].x += SPRITE_STEP_SIZE;
                 if (sprite_actors[i].x >= sprite_actors[i].center_x) {
                     sprite_actors[i].x = sprite_actors[i].center_x;
-                    sprite_actors[i].frame = 0;
                     sprite_actors[i].state = AS_WALK;
                 } else {
                     sprite_actor_take_step(&sprite_actors[i]);
