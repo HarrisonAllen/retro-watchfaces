@@ -362,6 +362,21 @@ def add_palette_data_structure_to_palettes_h(palettes_h_filename, palettes, grou
     with open(palettes_h_filename, "a") as palettes_h_file:
         palettes_h_file.write(palette_data_structure)
 
+def update_defines_h(defines_h_filename, config):
+    time_y_tile_offset = config["timeYTileOffset"]
+    time_y_pixel_shift = config["timeYPixelShift"]
+    sprite_bottom_y = config["spriteBottomY"]
+    background_step_size = config["backgroundStepSize"]
+    foreground_step_size = config["foregroundStepSize"]
+    sprite_step_size = config["spriteStepSize"]
+    update_every_second = config["updateEverySecond"]
+    with open(defines_h_filename) as defines_file:
+        old_defines = defines_file.read()
+        new_defines = old_defines.format(**locals())
+
+    with open(defines_h_filename, "w") as defines_file:
+        defines_file.write(new_defines)
+
 def convert(directory):
     # Load config
     print("Loading config")
@@ -549,8 +564,15 @@ def convert(directory):
         add_resource_to_sprites_h(sprites_h_filename, sprite_group_name, sprite_num)
         sprite_groups.append(sprite_group_name)
 
-
     add_loader_info_to_sprites_h(sprites_h_filename, sprite_groups)
+
+    # Add user defines
+    print("Updating Defines.h...")
+    defines_h_filename = os.path.join(watchface_directory, "src", "c", "resources", "Defines.h")
+    update_defines_h(defines_h_filename, config)
+
+    print("Watchface generated! Located at ", watchface_directory)
+    print("Full output at ", output_directory)
 
 
 if __name__ == "__main__":

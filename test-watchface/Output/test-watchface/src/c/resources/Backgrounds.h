@@ -5,7 +5,6 @@
 #include "Helpers.h"
 #include "Palettes.h"
 
-
 static void load_SuperMarioWorld(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) {
     // Load SuperMarioWorld tilesheet
     load_tilesheet(gbc_graphics, RESOURCE_ID_DATA_SUPERMARIOWORLD_TILESHEET, 0, 0, 0);
