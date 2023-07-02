@@ -20,7 +20,7 @@ Have an idea you *really* want to do, but don't know how to do any of the Python
 ├─ WatchfaceGenerator.py - Run this to generate a watchface
 ├─ Templates.py - A helper script for WatchfaceGenerator.py
 ├─ template-watchface - The project template that WatchfaceGenerator.py uses
-├─ example-project - An example of how you should set up your files for processing
+└─ example-project - An example of how you should set up your files for processing
    ├─ Backgrounds - The Background Groups for your watchface
    │  ├─ World0_0 - An example background group
    │  │  ├─ Background.png - The background of this background group, 256 x 184 pixels (32 x 23 tiles)
@@ -98,7 +98,7 @@ Save each sprite group in a directory under `Sprites`
 
 
 ### But you can just use regular images
-If you don't want to do that, you can just drop in `.png` files following the correct file structure.
+If you're feeling lazy, you can just drop in `.png` files following the correct file structure.
 
 ### For best results
 * Make sure your images are in the Pebble color space. You can download color palettes for different programs here: https://developer.rebble.io/developer.pebble.com/guides/app-resources/images/index.html#color-palettes
@@ -125,11 +125,11 @@ If you don't want to do that, you can just drop in `.png` files following the co
 * `spriteBottomY`
     * The pixel position for the bottom of each sprite, measured from the top of the background.
 * `backgroundStepSize`
-    * How many pixels the background should step during a scroll.
+    * How many pixels the background should move during a scroll.
 * `foregroundStepSize`
-    * How many pixels the foreground should step during a scroll.
+    * How many pixels the foreground should move during a scroll.
 * `spriteStepSize`
-    * How many pixels a sprite should step when moving on or off the screen.
+    * How many pixels a sprite should move when moving on or off the screen.
 * `updateEverySecond`
     * Should the watchface update every second?
     * Set to `"true"` to scroll the background every second, and swap out sprites every minute.
