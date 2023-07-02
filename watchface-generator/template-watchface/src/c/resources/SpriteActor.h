@@ -76,10 +76,7 @@ static void sprite_actor_render(SpriteActor *sprite_actor, GBC_Graphics *gbc_gra
 }
 
 static void sprite_actor_take_step(SpriteActor *sprite_actor) {
-    sprite_actor->frame = sprite_actor->frame + 1;
-    if (sprite_actor->frame >= sprite_actor->num_sprites) {
-        sprite_actor->frame = 1;
-    }
+    sprite_actor->frame = (sprite_actor->frame + 1) % sprite_actor->num_sprites;
 }
 
 static void sprite_actor_reset(SpriteActor *sprite_actor) {

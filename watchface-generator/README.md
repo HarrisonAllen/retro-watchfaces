@@ -29,7 +29,7 @@ Have an idea you *really* want to do, but don't know how to do any of the Python
    │  ⋮  
    ├─ Sprites - The Sprite Groups for your watchface
    │  ├─ LuigiBig - An example Sprite Group
-   │  │  ├─ Stand.png - An example sprite
+   │  │  ├─ Walk0.png - An example sprite
    │  ⋮   ⋮
    ├─ config.json - The configuration for the project.
    ├─ background_template.xcf - A template GIMP file for a background.
@@ -54,7 +54,7 @@ project-name - Can change, any characters allowed
 │  ⋮  
 ├─ Sprites - DO NOT CHANGE THIS NAME
 │  ├─ LuigiBig - Can change, alphanumeric characters and underscores only
-│  │  ├─ Stand.png - Can change, alphanumeric characters and underscores only
+│  │  ├─ Walk0.png - Can change, alphanumeric characters and underscores only
 │  ⋮   ⋮
 └─ config.json - DO NOT CHANGE THIS NAME
 ```
@@ -94,7 +94,7 @@ Save each sprite group in a directory under `Sprites`
 * For example, I want to make a sprite group called `MarioBig`
     1. Make a directory in `Sprites` called `MarioBig`
     2. Export each sprite image as a `.png` in the `MarioBig` directory
-        * E.g. `Stand.png`, `Walk0.png`, etc.
+        * E.g. `Walk0.png`, `Walk1.png`, etc.
 
 
 ### But you can just use regular images
