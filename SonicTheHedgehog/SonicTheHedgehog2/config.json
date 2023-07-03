@@ -2,5 +2,12 @@
     "watchfaceName": "sonic-the-hedgehog-2",
     "watchfaceAuthor": "Harrison Allen",
     "watchfaceDisplayName": "Sonic the Hedgehog 2 - Retro Series",
-    "uuid": "Replace me with https://www.uuidgenerator.net/"
+    "uuid": "2869cbbc-4aa1-4028-881e-481cd6d613c8",
+    "timeYTileOffset": 7,
+    "timeYPixelShift": 0,
+    "spriteBottomY": 136,
+    "backgroundStepSize": 2,
+    "foregroundStepSize": 4,
+    "spriteStepSize": 6,
+    "updateEverySecond": "true"
 }

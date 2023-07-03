@@ -9,7 +9,7 @@
     "dependencies": {},
     "pebble": {
         "displayName": "Sonic the Hedgehog 2 - Retro Series",
-        "uuid": "Replace me with https://www.uuidgenerator.net/",
+        "uuid": "2869cbbc-4aa1-4028-881e-481cd6d613c8",
         "sdkVersion": "3",
         "enableMultiJS": true,
         "targetPlatforms": [
@@ -24,7 +24,113 @@
             "dummy"
         ],
         "resources": {
-            "media": []
+            "media": [
+                {
+                    "type": "raw",
+                    "name": "DATA_AQUATICRUINZONE_TILESHEET",
+                    "file": "data/backgrounds/AquaticRuinZone/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_AQUATICRUINZONE_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/AquaticRuinZone/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_AQUATICRUINZONE_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/AquaticRuinZone/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_AQUATICRUINZONE_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/AquaticRuinZone/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_AQUATICRUINZONE_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/AquaticRuinZone/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_AQUATICRUINZONE_NUMBERMAPS",
+                    "file": "data/backgrounds/AquaticRuinZone/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_EMERALDHILLZONE_TILESHEET",
+                    "file": "data/backgrounds/EmeraldHillZone/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_EMERALDHILLZONE_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/EmeraldHillZone/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_EMERALDHILLZONE_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/EmeraldHillZone/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_EMERALDHILLZONE_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/EmeraldHillZone/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_EMERALDHILLZONE_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/EmeraldHillZone/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_EMERALDHILLZONE_NUMBERMAPS",
+                    "file": "data/backgrounds/EmeraldHillZone/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MYSTICCAVEZONE_TILESHEET",
+                    "file": "data/backgrounds/MysticCaveZone/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MYSTICCAVEZONE_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/MysticCaveZone/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MYSTICCAVEZONE_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/MysticCaveZone/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MYSTICCAVEZONE_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/MysticCaveZone/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MYSTICCAVEZONE_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/MysticCaveZone/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MYSTICCAVEZONE_NUMBERMAPS",
+                    "file": "data/backgrounds/MysticCaveZone/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_KNUCKLES_TILESHEET",
+                    "file": "data/sprite/Knuckles/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_SONIC_TILESHEET",
+                    "file": "data/sprite/Sonic/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_TAILS_TILESHEET",
+                    "file": "data/sprite/Tails/Tilesheet.bin"
+                }
+            ]
         }
     }
 }
