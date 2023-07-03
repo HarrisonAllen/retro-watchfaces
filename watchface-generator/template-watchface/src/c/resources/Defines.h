@@ -18,7 +18,7 @@
 #define NUMBER_WIDTH 3
 #define TOTAL_NUMBERS 11
 
-#define FRAME_DURATION 125 // In ms
+#define FRAME_DURATION 200 // In ms
 
 #define UPDATE_EVERY_SECOND {update_every_second}
 

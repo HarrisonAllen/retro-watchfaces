@@ -6,8 +6,6 @@
 #include "resources/Defines.h"
 #include "pebble-gbc-graphics-advanced/pebble-gbc-graphics-advanced.h"
 
-// TODO: Overhaul
-
 static Window *s_window;
 static GBC_Graphics *s_gbc_graphics;
 static AppTimer *s_frame_timer;
@@ -102,7 +100,6 @@ static void step() {
                 sprite_actors[i].x += SPRITE_STEP_SIZE;
                 if (sprite_actors[i].x >= sprite_actors[i].center_x) {
                     sprite_actors[i].x = sprite_actors[i].center_x;
-                    sprite_actors[i].frame = 0;
                     sprite_actors[i].state = AS_WALK;
                 } else {
                     sprite_actor_take_step(&sprite_actors[i]);

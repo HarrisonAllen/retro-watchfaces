@@ -10,10 +10,10 @@ static void load_{background_group}(GBC_Graphics *gbc_graphics, uint8_t *numbers
     }}
 
     // Load {background_group} tilemaps and attrmaps
-    load_tilemap(gbc_graphics, RESOURCE_ID_DATA_{uppercase_background_group}_BACKGROUNDTILEMAP, 0);
-    load_attrmap(gbc_graphics, RESOURCE_ID_DATA_{uppercase_background_group}_BACKGROUNDATTRMAP, 0);
-    load_tilemap(gbc_graphics, RESOURCE_ID_DATA_{uppercase_background_group}_FOREGROUNDTILEMAP, 1);
-    load_attrmap(gbc_graphics, RESOURCE_ID_DATA_{uppercase_background_group}_FOREGROUNDATTRMAP, 1);
+    load_tilemap(gbc_graphics, RESOURCE_ID_DATA_{uppercase_background_group}_BACKGROUNDTILEMAP, BG_LAYER);
+    load_attrmap(gbc_graphics, RESOURCE_ID_DATA_{uppercase_background_group}_BACKGROUNDATTRMAP, BG_LAYER);
+    load_tilemap(gbc_graphics, RESOURCE_ID_DATA_{uppercase_background_group}_FOREGROUNDTILEMAP, FG_LAYER);
+    load_attrmap(gbc_graphics, RESOURCE_ID_DATA_{uppercase_background_group}_FOREGROUNDATTRMAP, FG_LAYER);
     
     // Load {background_group} numbers
     load_resource(gbc_graphics, RESOURCE_ID_DATA_{uppercase_background_group}_NUMBERMAPS, numbers_buffer);
