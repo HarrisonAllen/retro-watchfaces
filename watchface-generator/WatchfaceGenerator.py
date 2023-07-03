@@ -23,6 +23,12 @@ NUMBER_WIDTH = 3
 NUMBER_HEIGHT = 5
 PALETTE_PIXEL_SIZE = 8
 
+def colors_are_the_same(image_1, image_2):
+    return list(image_1.convert('RGB').getdata()) == list(image_2.convert('RGB').getdata())
+
+def alphas_are_the_same(image_1, image_2):
+    return [i[-1] for i in image_1.convert('RGBA').getdata()] == [i[-1] for i in image_2.convert('RGBA').getdata()]
+
 # Will return a tuple of:
 # - index - the index of the image (None if not found)
 # - x_flip - if the image is flipped in the x direction
@@ -36,7 +42,7 @@ def find_image(image_to_find, images_to_search):
             flipped_image_to_find = flipped_image_to_find.transpose(Image.FLIP_TOP_BOTTOM)
 
         for image_index in range(len(images_to_search)):
-            if list(images_to_search[image_index].convert('RGB').getdata()) == list(flipped_image_to_find.convert('RGB').getdata()):
+            if colors_are_the_same(images_to_search[image_index], flipped_image_to_find) and alphas_are_the_same(images_to_search[image_index], flipped_image_to_find):
                 return (image_index, x_flip, y_flip)
     
     return (None, None, None)
