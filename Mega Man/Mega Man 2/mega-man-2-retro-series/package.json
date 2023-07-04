@@ -1,0 +1,326 @@
+{
+    "name": "mega-man-2-retro-series",
+    "author": "Harrison Allen",
+    "version": "1.0.0",
+    "keywords": [
+        "pebble-app"
+    ],
+    "private": true,
+    "dependencies": {},
+    "pebble": {
+        "displayName": "Mega Man 2 - Retro Series",
+        "uuid": "85687203-d727-42fc-8093-9c012c95abdb",
+        "sdkVersion": "3",
+        "enableMultiJS": true,
+        "targetPlatforms": [
+            "basalt",
+            "chalk",
+            "diorite"
+        ],
+        "watchapp": {
+            "watchface": true
+        },
+        "messageKeys": [
+            "dummy"
+        ],
+        "resources": {
+            "media": [
+                {
+                    "type": "raw",
+                    "name": "DATA_MASK_TILESHEET",
+                    "file": "data/MaskTilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_AIRMAN_TILESHEET",
+                    "file": "data/backgrounds/AirMan/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_AIRMAN_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/AirMan/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_AIRMAN_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/AirMan/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_AIRMAN_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/AirMan/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_AIRMAN_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/AirMan/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_AIRMAN_NUMBERMAPS",
+                    "file": "data/backgrounds/AirMan/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BUBBLEMAN_TILESHEET",
+                    "file": "data/backgrounds/BubbleMan/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BUBBLEMAN_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/BubbleMan/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BUBBLEMAN_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/BubbleMan/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BUBBLEMAN_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/BubbleMan/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BUBBLEMAN_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/BubbleMan/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BUBBLEMAN_NUMBERMAPS",
+                    "file": "data/backgrounds/BubbleMan/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRASHMAN_TILESHEET",
+                    "file": "data/backgrounds/CrashMan/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRASHMAN_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/CrashMan/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRASHMAN_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/CrashMan/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRASHMAN_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/CrashMan/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRASHMAN_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/CrashMan/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRASHMAN_NUMBERMAPS",
+                    "file": "data/backgrounds/CrashMan/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_FLASHMAN_TILESHEET",
+                    "file": "data/backgrounds/FlashMan/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_FLASHMAN_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/FlashMan/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_FLASHMAN_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/FlashMan/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_FLASHMAN_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/FlashMan/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_FLASHMAN_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/FlashMan/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_FLASHMAN_NUMBERMAPS",
+                    "file": "data/backgrounds/FlashMan/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_HEATMAN_TILESHEET",
+                    "file": "data/backgrounds/HeatMan/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_HEATMAN_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/HeatMan/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_HEATMAN_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/HeatMan/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_HEATMAN_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/HeatMan/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_HEATMAN_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/HeatMan/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_HEATMAN_NUMBERMAPS",
+                    "file": "data/backgrounds/HeatMan/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_METALMAN_TILESHEET",
+                    "file": "data/backgrounds/MetalMan/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_METALMAN_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/MetalMan/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_METALMAN_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/MetalMan/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_METALMAN_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/MetalMan/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_METALMAN_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/MetalMan/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_METALMAN_NUMBERMAPS",
+                    "file": "data/backgrounds/MetalMan/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_QUICKMAN_TILESHEET",
+                    "file": "data/backgrounds/QuickMan/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_QUICKMAN_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/QuickMan/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_QUICKMAN_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/QuickMan/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_QUICKMAN_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/QuickMan/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_QUICKMAN_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/QuickMan/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_QUICKMAN_NUMBERMAPS",
+                    "file": "data/backgrounds/QuickMan/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WOODMAN_TILESHEET",
+                    "file": "data/backgrounds/WoodMan/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WOODMAN_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/WoodMan/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WOODMAN_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/WoodMan/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WOODMAN_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/WoodMan/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WOODMAN_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/WoodMan/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_WOODMAN_NUMBERMAPS",
+                    "file": "data/backgrounds/WoodMan/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_AIRSHOOTER_TILESHEET",
+                    "file": "data/sprite/AirShooter/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ATOMICFIRE_TILESHEET",
+                    "file": "data/sprite/AtomicFire/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BUBBLELEAD_TILESHEET",
+                    "file": "data/sprite/BubbleLead/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRASHBOMBER_TILESHEET",
+                    "file": "data/sprite/CrashBomber/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ITEM_TILESHEET",
+                    "file": "data/sprite/Item/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_LEAFSHIELD_TILESHEET",
+                    "file": "data/sprite/LeafShield/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MEGABUSTER_TILESHEET",
+                    "file": "data/sprite/MegaBuster/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_METALBLADE_TILESHEET",
+                    "file": "data/sprite/MetalBlade/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_QUICKBOOMERANG_TILESHEET",
+                    "file": "data/sprite/QuickBoomerang/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_TIMESTOPPER_TILESHEET",
+                    "file": "data/sprite/TimeStopper/Tilesheet.bin"
+                }
+            ]
+        }
+    }
+}

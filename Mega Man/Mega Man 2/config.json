@@ -1,0 +1,13 @@
+{
+    "watchfaceName": "mega-man-2-retro-series",
+    "watchfaceAuthor": "Harrison Allen",
+    "watchfaceDisplayName": "Mega Man 2 - Retro Series",
+    "uuid": "85687203-d727-42fc-8093-9c012c95abdb",
+    "timeYTileOffset": 9,
+    "timeYPixelShift": 0,
+    "spriteBottomY": 152,
+    "backgroundStepSize": 2,
+    "foregroundStepSize": 2,
+    "spriteStepSize": 6,
+    "updateEverySecond": "true"
+}
