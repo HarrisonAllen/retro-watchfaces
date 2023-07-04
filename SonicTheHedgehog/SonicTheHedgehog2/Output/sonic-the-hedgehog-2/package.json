@@ -27,6 +27,11 @@
             "media": [
                 {
                     "type": "raw",
+                    "name": "DATA_MASK_TILESHEET",
+                    "file": "data/MaskTilesheet.bin"
+                },
+                {
+                    "type": "raw",
                     "name": "DATA_AQUATICRUINZONE_TILESHEET",
                     "file": "data/backgrounds/AquaticRuinZone/Tilesheet.bin"
                 },

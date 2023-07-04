@@ -23,7 +23,11 @@
     ],
     "resources": {
       "media": [
-        
+        {
+            "type": "raw",
+            "name": "DATA_MASK_TILESHEET",
+            "file": "data/MaskTilesheet.bin"
+        }
       ]
     }
   }

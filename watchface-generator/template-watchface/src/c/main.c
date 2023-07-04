@@ -14,6 +14,13 @@ static uint8_t s_number_buffer[NUMBER_HEIGHT * NUMBER_WIDTH * TOTAL_NUMBERS * 2]
 
 SpriteActor sprite_actors[NUM_SPRITE_ACTORS];
 static bool changing_sprites = false;
+static bool sprite_stepping = false;
+
+static bool changing_backgrounds = false;
+static short mask_level = 0;
+static short mask_change = 1;
+
+static uint8_t last_background_group, last_sprite_group;
 
 static void draw_number(uint8_t background, uint8_t tile_x, uint8_t tile_y, char number) {
     uint8_t number_value;
@@ -52,7 +59,9 @@ static void load_time() {
 }
 
 static void generate_backgrounds() {
-    (*LOAD_BACKGROUND_GROUP[rand() % NUM_BACKGROUND_GROUPS])(s_gbc_graphics, s_number_buffer);
+    uint8_t new_background_group = rand() % NUM_BACKGROUND_GROUPS;
+    (*LOAD_BACKGROUND_GROUP[new_background_group])(s_gbc_graphics, s_number_buffer);
+    last_background_group = new_background_group;
 
     GBC_Graphics_bg_set_scroll_pos(s_gbc_graphics, BG_LAYER, SCREEN_X_OFFSET, SCREEN_Y_OFFSET);
     GBC_Graphics_bg_set_scroll_pos(s_gbc_graphics, FG_LAYER, SCREEN_X_OFFSET, SCREEN_Y_OFFSET);
@@ -67,33 +76,95 @@ static void generate_backgrounds() {
     load_time();
 }
 
+static void set_mask_palette() {
+#if defined(PBL_COLOR)
+    GBC_Graphics_set_bg_palette(s_gbc_graphics, MASK_PALETTE_NUM, 5, GColorBlackARGB8, GColorBlackARGB8, GColorDarkGrayARGB8, GColorLightGrayARGB8, GColorWhiteARGB8);
+#else
+    GBC_Graphics_set_bg_palette(s_gbc_graphics, MASK_PALETTE_NUM, 5, GBC_COLOR_BLACK, GBC_COLOR_BLACK, GBC_COLOR_ALPHA_GRAY, GBC_COLOR_GRAY, GBC_COLOR_WHITE);
+#endif
+}
+
+static void generate_mask_layer() {
+    load_tilesheet(s_gbc_graphics, RESOURCE_ID_DATA_MASK_TILESHEET, 0, MASK_VRAM_OFFSET, MASK_VRAM_NUM);
+
+    set_mask_palette();
+
+    for (uint8_t y = 0; y < GBC_TILEMAP_HEIGHT; y++) {
+        for (uint8_t x = 0; x < GBC_TILEMAP_WIDTH; x++) {
+            GBC_Graphics_bg_set_tile(s_gbc_graphics, MASK_LAYER, x, y, MASK_VRAM_OFFSET);
+            GBC_Graphics_bg_set_tile_palette(s_gbc_graphics, MASK_LAYER, x, y, MASK_PALETTE_NUM);
+            GBC_Graphics_bg_set_tile_vram_bank(s_gbc_graphics, MASK_LAYER, x, y, MASK_VRAM_NUM);
+        }
+    }
+    
+    GBC_Graphics_alpha_mode_set_bg_enabled(s_gbc_graphics, MASK_LAYER, true);
+    GBC_Graphics_alpha_mode_set_mode(s_gbc_graphics, MASK_LAYER, GBC_ALPHA_MODE_ADD);
+    GBC_Graphics_lcdc_set_bg_layer_enabled(s_gbc_graphics, MASK_LAYER, false);
+}
+
+static void update_backgrounds() {
+    uint8_t new_background_group = rand() % NUM_BACKGROUND_GROUPS;
+    while (new_background_group == last_background_group) {
+        new_background_group = rand() % NUM_BACKGROUND_GROUPS;
+    }
+    (*LOAD_BACKGROUND_GROUP[new_background_group])(s_gbc_graphics, s_number_buffer);
+    last_background_group = new_background_group;
+
+    load_time();
+}
+
 static void load_new_sprite(SpriteActor *sprite_actor) {
-    (*LOAD_SPRITE_GROUP[rand() % NUM_SPRITE_GROUPS])(s_gbc_graphics,
-                                                     sprite_actor->vram_bank, 
-                                                     sprite_actor->vram_bank_offset,
-                                                     sprite_actor->palette, 
-                                                     &(sprite_actor->num_sprites), 
-                                                     &(sprite_actor->data));
+    uint8_t new_sprite_group = rand() % NUM_SPRITE_GROUPS;
+    while (new_sprite_group == last_sprite_group) {
+        new_sprite_group = rand() % NUM_SPRITE_GROUPS;
+    }
+    (*LOAD_SPRITE_GROUP[new_sprite_group])(s_gbc_graphics,
+                                           sprite_actor->vram_bank, 
+                                           sprite_actor->vram_bank_offset,
+                                           sprite_actor->palette, 
+                                           &(sprite_actor->num_sprites), 
+                                           &(sprite_actor->data));
+    last_sprite_group = new_sprite_group;
 }
 
 static void step() {
     GRect bounds = GBC_Graphics_get_screen_bounds(s_gbc_graphics);
-    if (!changing_sprites) {
+    if (!changing_sprites && !changing_backgrounds) {
         // Scroll backgrounds
         GBC_Graphics_bg_move(s_gbc_graphics, BG_LAYER, BG_STEP_SIZE, 0);
         GBC_Graphics_bg_move(s_gbc_graphics, FG_LAYER, FG_STEP_SIZE, 0);
+    }
+
+    if (changing_backgrounds) {
+        mask_level += mask_change;
+        if (mask_level >= MASK_LEVELS - 1) {
+            update_backgrounds();
+            set_mask_palette();
+            mask_change = -1;
+        } else if (mask_level <= 0) {
+            changing_backgrounds = false;
+            GBC_Graphics_lcdc_set_bg_layer_enabled(s_gbc_graphics, MASK_LAYER, false);
+        }
+        
+        for (uint8_t y = 0; y < GBC_TILEMAP_HEIGHT; y++) {
+            for (uint8_t x = 0; x < GBC_TILEMAP_WIDTH; x++) {
+                GBC_Graphics_bg_set_tile(s_gbc_graphics, MASK_LAYER, x, y, MASK_VRAM_OFFSET + mask_level);
+            }
+        }
     }
 
     // Update time
     load_time();
 
     if (!changing_sprites) { // Walk in place
-        for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
-            if (sprite_actors[i].state == AS_WALK) {
-                sprite_actor_take_step(&sprite_actors[i]);
-                sprite_actor_render(&sprite_actors[i], s_gbc_graphics);
+        if (sprite_stepping) {
+            for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
+                if (sprite_actors[i].state == AS_WALK) {
+                    sprite_actor_take_step(&sprite_actors[i]);
+                    sprite_actor_render(&sprite_actors[i], s_gbc_graphics);
+                }
             }
-        }
+            sprite_stepping = false;
     } else { // Move sprites
         for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
             if (sprite_actors[i].state == AS_WALK_ON) {
@@ -130,7 +201,7 @@ static void frame_timer_handle(void* context) {
             break;
         }
     }
-    if (!changing_sprites) {
+    if (!changing_sprites && !changing_backgrounds) {
         s_frame_timer = NULL;
     } else {
         s_frame_timer = app_timer_register(FRAME_DURATION, frame_timer_handle, NULL);
@@ -140,7 +211,18 @@ static void frame_timer_handle(void* context) {
 
 static void start_changing_sprites() {
     changing_sprites = true;
-    s_frame_timer = app_timer_register(FRAME_DURATION, frame_timer_handle, NULL);
+    if (s_frame_timer == NULL)
+        s_frame_timer = app_timer_register(FRAME_DURATION, frame_timer_handle, NULL);
+}
+
+static void start_changing_backgrounds() {
+    changing_backgrounds = true;
+    mask_change = 1;
+    mask_level = 0;
+    GBC_Graphics_lcdc_set_bg_layer_enabled(s_gbc_graphics, MASK_LAYER, true);
+    
+    if (s_frame_timer == NULL)
+        s_frame_timer = app_timer_register(FRAME_DURATION, frame_timer_handle, NULL);
 }
 
 static void render_sprites() {
@@ -156,7 +238,9 @@ static void initialize_sprites() {
         uint8_t palette_num = i;
         uint8_t num_sprites;
         const uint8_t *sprite_data;
-        (*LOAD_SPRITE_GROUP[rand() % NUM_SPRITE_GROUPS])(s_gbc_graphics, vram_bank, vram_start_offset, palette_num, &num_sprites, &sprite_data);
+        uint8_t new_sprite_group = rand() % NUM_SPRITE_GROUPS;
+        (*LOAD_SPRITE_GROUP[new_sprite_group])(s_gbc_graphics, vram_bank, vram_start_offset, palette_num, &num_sprites, &sprite_data);
+        last_sprite_group = new_sprite_group;
 
         sprite_actor_init(&sprite_actors[i], 
                         s_gbc_graphics,
@@ -176,8 +260,12 @@ static void initialize_sprites() {
 }
 
 static void time_handler(struct tm *tick_time, TimeUnits units_changed) {
+    if (units_changed & HOUR_UNIT) {
+        start_changing_backgrounds();
+    }
+
     if (!changing_sprites) {
-        if (UPDATE_EVERY_SECOND ? (tick_time->tm_sec == 0) : (tick_time->tm_min == 0)) {
+        if (UPDATE_EVERY_SECOND ? (units_changed & MINUTE_UNIT) : (units_changed & HOUR_UNIT)) {
             for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
                 if (sprite_actors[i].state == AS_OFFSCREEN) {
                     sprite_actors[i].state = AS_WALK_ON;
@@ -188,7 +276,10 @@ static void time_handler(struct tm *tick_time, TimeUnits units_changed) {
             }
             start_changing_sprites();
         }
-        step();
+        if (tick_time->tm_sec % 4 == 0 || !UPDATE_EVERY_SECOND) {
+            sprite_stepping = true;
+            step();
+        }
     }
     
     // Update time
@@ -217,12 +308,12 @@ static void window_load(Window *window) {
     GBC_Graphics_set_screen_bounds(s_gbc_graphics, GBC_SCREEN_BOUNDS_FULL);
 
     generate_backgrounds();
-    GBC_Graphics_lcdc_set_bg_layer_enabled(s_gbc_graphics, MASK_LAYER, false);
-    GBC_Graphics_lcdc_set_sprite_layer_z(s_gbc_graphics, NUM_BACKGROUNDS-1);
+    generate_mask_layer();
+    GBC_Graphics_lcdc_set_sprite_layer_z(s_gbc_graphics, SPRITE_LAYER);
     initialize_sprites();
 
     // Setup the frame timer that will call the game step function
-    s_frame_timer = app_timer_register(FRAME_DURATION, frame_timer_handle, NULL);
+    s_frame_timer = NULL;
     app_focus_service_subscribe(will_focus_handler);
 
     // Setup time

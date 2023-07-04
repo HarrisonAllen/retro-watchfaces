@@ -12,13 +12,19 @@
 #define BG_LAYER 0
 #define FG_LAYER 1
 #define TIME_LAYER 2
+#define SPRITE_LAYER 2
 #define MASK_LAYER 3
+
+#define MASK_PALETTE_NUM (GBC_PALETTE_NUM_PALETTES - 1)
+#define MASK_VRAM_NUM (NUM_VRAMS - 1)
+#define MASK_LEVELS 5
+#define MASK_VRAM_OFFSET (GBC_VRAM_BANK_NUM_TILES - 1 - MASK_LEVELS)
 
 #define NUMBER_HEIGHT 5
 #define NUMBER_WIDTH 3
 #define TOTAL_NUMBERS 11
 
-#define FRAME_DURATION 200 // In ms
+#define FRAME_DURATION 125 // In ms
 
 #define UPDATE_EVERY_SECOND {update_every_second}
 
