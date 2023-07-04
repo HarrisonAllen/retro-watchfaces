@@ -165,6 +165,7 @@ static void step() {
                 }
             }
             sprite_stepping = false;
+        }
     } else { // Move sprites
         for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
             if (sprite_actors[i].state == AS_WALK_ON) {
