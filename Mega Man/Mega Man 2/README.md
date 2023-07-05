@@ -1,6 +1,6 @@
 # Mega Man 2 - Retro Series
 
-![Banner](appstore/Banner/Banner.png)
+![Banner](appstore/banner/banner.png)
 
 ![Basalt](appstore/basalt/1.png) ![Chalk](appstore/chalk/1.png) ![Diorite](appstore/diorite/1.png)
 
