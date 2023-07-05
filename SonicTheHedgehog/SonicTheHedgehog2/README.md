@@ -1,6 +1,6 @@
 # Sonic the Hedgehog 2 - Retro Series
 
-![Banner](appstore/Banner.png)
+![Banner](appstore/banner/Banner.png)
 
 ![Basalt](appstore/basalt/Basalt.gif) ![Chalk](appstore/chalk/Chalk.gif) ![Diorite](appstore/diorite/Diorite.gif)
 
