@@ -13,6 +13,10 @@ static AppTimer *s_frame_timer;
 static uint8_t s_number_buffer[NUMBER_HEIGHT * NUMBER_WIDTH * TOTAL_NUMBERS * 2];
 
 SpriteActor sprite_actors[NUM_SPRITE_ACTORS];
+SpriteActor *trainer_sprite_actor = &sprite_actors[0];
+SpriteActor *pokemon_sprite_actors = &sprite_actors[1];
+
+uint8_t pokemon_data_buffers[NUM_POKEMON_SPRITE_ACTORS][NUM_POKEMON_FRAMES * SPRITE_DATA_BYTES_PER_FRAME];
 static bool walking_on = false;
 static bool sprite_stepping = false;
 
@@ -58,9 +62,9 @@ static void load_time() {
     draw_number(TIME_LAYER, TIME_X_TILE_OFFSET + 4 * NUMBER_WIDTH + 2, TIME_Y_TILE_OFFSET, time_buffer[4]);
 }
 
-static void generate_backgrounds() {
+static uint16_t generate_backgrounds() {
     uint8_t new_background_group = rand() % NUM_BACKGROUND_GROUPS;
-    (*LOAD_BACKGROUND_GROUP[new_background_group])(s_gbc_graphics, s_number_buffer);
+    uint16_t loaded_tiles = (*LOAD_BACKGROUND_GROUP[new_background_group])(s_gbc_graphics, s_number_buffer);
     last_background_group = new_background_group;
 
     GBC_Graphics_bg_set_scroll_pos(s_gbc_graphics, BG_LAYER, SCREEN_X_OFFSET, SCREEN_Y_OFFSET);
@@ -74,6 +78,8 @@ static void generate_backgrounds() {
     }
     GBC_Graphics_bg_set_scroll_pos(s_gbc_graphics, TIME_LAYER, SCREEN_X_OFFSET, SCREEN_Y_OFFSET + TIME_Y_PIXEL_SHIFT);
     load_time();
+
+    return loaded_tiles;
 }
 
 static void set_mask_palette() {
@@ -102,6 +108,7 @@ static void generate_mask_layer() {
     GBC_Graphics_lcdc_set_bg_layer_enabled(s_gbc_graphics, MASK_LAYER, false);
 }
 
+// I'll leave this here for now, but I'm not using it for this project
 static void update_backgrounds() {
     uint8_t new_background_group = rand() % NUM_BACKGROUND_GROUPS;
     while (NUM_BACKGROUND_GROUPS > 1 && new_background_group == last_background_group) {
@@ -235,29 +242,54 @@ static void render_sprites() {
     }
 }
 
-static void initialize_sprites() {
-    for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
-        uint8_t vram_bank = i;
-        uint8_t vram_start_offset = 200;
-        uint8_t palette_num = i;
-        uint8_t num_sprites;
-        const uint8_t *sprite_data;
-        uint8_t new_sprite_group = rand() % NUM_SPRITE_GROUPS;
-        (*LOAD_SPRITE_GROUP[new_sprite_group])(s_gbc_graphics, vram_bank, vram_start_offset, palette_num, &num_sprites, &sprite_data);
-        last_sprite_group = new_sprite_group;
-
-        sprite_actor_init(&sprite_actors[i], 
+static void initialize_sprites(uint16_t trainer_vram_offset) {
+    // 1. Create trainer sprite actor
+    // 2. Create pokemon sprite actors
+    // 3. Calculate width of all sprite actors side by side
+    // 4. Calculate center xs such that trainer is at most at right edge, but
+    //    ideally the sprite group is in the center
+    // 5. Distribute sprites equally
+    // 6. Set all sprites visible and ready to walk on
+    uint8_t vram_bank = 0;
+    uint8_t vram_start_offset = trainer_vram_offset;
+    uint8_t palette_num = 0;
+    uint8_t num_sprites;
+    const uint8_t *sprite_data;
+    uint8_t new_sprite_group = rand() % NUM_SPRITE_GROUPS;
+    (*LOAD_SPRITE_GROUP[new_sprite_group])(s_gbc_graphics, vram_bank, vram_start_offset, palette_num, &num_sprites, &sprite_data);
+    sprite_actor_init(trainer_sprite_actor,
                         s_gbc_graphics,
-                        i,
+                        0,
                         vram_bank,
                         vram_start_offset,
                         num_sprites,
                         sprite_data,
                         palette_num);
+    
+    
+    for (uint8_t i = 0; i < NUM_POKEMON_SPRITE_ACTORS; i++) {
+        vram_bank = i+1;
+        vram_start_offset = 0;
+        palette_num = i+1;
+        // Load pokemon sprite, use data array pointers
+        int pokemon_number = rand() % NUM_POKEMON;
+        load_pokemon_sprite(s_gbc_graphics, pokemon_number, vram_bank, vram_start_offset, i+1, pokemon_data_buffers[i]);
+        
+        sprite_actor_init(&pokemon_sprite_actors[i], 
+                        s_gbc_graphics,
+                        i+1,
+                        vram_bank,
+                        vram_start_offset,
+                        NUM_POKEMON_FRAMES,
+                        pokemon_data_buffers[i],
+                        palette_num);
+    }
+
+    for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
         sprite_actors[i].state = AS_WALK_ON;
         sprite_actors[i].hidden = false;
-        sprite_actors[i].center_x = sprite_actors[i].center_x - i * sprite_actors[i].width;
-        sprite_actors[i].x = sprite_actors[i].x - i * sprite_actors[i].width;
+        sprite_actors[i].center_x = sprite_actors[i].center_x - i * sprite_actors[0].width;
+        sprite_actors[i].x = sprite_actors[i].x - i * sprite_actors[0].width;
         sprite_actors[i].frame = i % sprite_actors[i].num_sprites;
     }
 
@@ -313,10 +345,10 @@ static void window_load(Window *window) {
 
     GBC_Graphics_set_screen_bounds(s_gbc_graphics, GBC_SCREEN_BOUNDS_FULL);
 
-    generate_backgrounds();
+    uint16_t loaded_tiles = generate_backgrounds();
     generate_mask_layer();
     GBC_Graphics_lcdc_set_sprite_layer_z(s_gbc_graphics, SPRITE_LAYER);
-    initialize_sprites();
+    initialize_sprites(loaded_tiles);
 
     // Setup the frame timer that will call the game step function
     s_frame_timer = NULL;

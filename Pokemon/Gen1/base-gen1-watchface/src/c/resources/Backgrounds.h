@@ -6,9 +6,9 @@
 #include "Palettes.h"
 #include "Defines.h"
 
-static void load_Route1(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) {
+static uint16_t load_Route1(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) {
     // Load Route1 tilesheet
-    load_tilesheet(gbc_graphics, RESOURCE_ID_DATA_ROUTE1_TILESHEET, 0, 0, 0);
+    uint16_t loaded_tiles = load_tilesheet(gbc_graphics, RESOURCE_ID_DATA_ROUTE1_TILESHEET, 0, 0, 0);
 
     // Load Route1 palettes
     for (uint8_t p = 0; p < GBC_PALETTE_NUM_PALETTES; p++) {
@@ -23,10 +23,11 @@ static void load_Route1(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) {
     
     // Load Route1 numbers
     load_resource(gbc_graphics, RESOURCE_ID_DATA_ROUTE1_NUMBERMAPS, numbers_buffer);
+    return loaded_tiles;
 }
 
 #define NUM_BACKGROUND_GROUPS 1
 
-void (*LOAD_BACKGROUND_GROUP[1])(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) = {
+uint16_t (*LOAD_BACKGROUND_GROUP[1])(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) = {
     load_Route1,
 };
