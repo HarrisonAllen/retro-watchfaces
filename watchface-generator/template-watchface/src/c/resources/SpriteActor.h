@@ -18,9 +18,9 @@ typedef struct {
     uint8_t num_sprites;
     uint8_t width;
     uint8_t height;
-    uint8_t x;
-    uint8_t y;
-    uint8_t center_x;
+    uint16_t x;
+    uint16_t y;
+    uint16_t center_x;
     uint8_t frame;
     uint8_t vram_bank_offset;
     uint8_t palette;
@@ -40,8 +40,8 @@ static void sprite_actor_init(SpriteActor *sprite_actor, GBC_Graphics *gbc_graph
     sprite_actor->index = sprite_index;
     sprite_actor->data = sprite_data;
     sprite_actor->num_sprites = num_sprites;
-    sprite_actor->width = GBC_TILE_WIDTH << sprite_data[1];
-    sprite_actor->height = GBC_TILE_HEIGHT << sprite_data[2];
+    sprite_actor->width = GBC_TILE_WIDTH * (sprite_data[1] + 1);
+    sprite_actor->height = GBC_TILE_HEIGHT * (sprite_data[2] + 1);
     sprite_actor->x = GBC_SPRITE_OFFSET_X - sprite_actor->width;
     sprite_actor->y = SPRITE_BOTTOM_Y - sprite_actor->height + GBC_SPRITE_OFFSET_Y - SCREEN_Y_OFFSET;
     sprite_actor->center_x = (bounds.size.w / 2) - sprite_actor->width / 2 + GBC_SPRITE_OFFSET_X;

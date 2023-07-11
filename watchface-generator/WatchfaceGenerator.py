@@ -244,8 +244,8 @@ def extract_sprite_and_tiles(image_filename, tiles, sprites):
         # width = TILE_SIZE * (2 ** sprite_width)
         # (width / tile_size) = 2 ** sprite_width
         # log2(width / tile_size) == sprite_width
-        round(math.log2(dims[0] // TILE_WIDTH)), 
-        round(math.log2(dims[1] // TILE_HEIGHT))
+        round(math.ceil(dims[0] / TILE_WIDTH) - 1), 
+        round(math.ceil(dims[1] / TILE_HEIGHT) - 1)
     ])
     
     for y in range(0, dims[1], TILE_HEIGHT):
