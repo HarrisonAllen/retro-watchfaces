@@ -1,0 +1,13 @@
+{
+    "watchfaceName": "base-gen1-watchface",
+    "watchfaceAuthor": "Harrison Allen",
+    "watchfaceDisplayName": "Pokemon Generation 1 - Retro Series",
+    "uuid": "49967d45-1fdd-49b0-8583-c158bac2806d",
+    "timeYTileOffset": 6,
+    "timeYPixelShift": 4,
+    "spriteBottomY": 136,
+    "backgroundStepSize": 2,
+    "foregroundStepSize": 2,
+    "spriteStepSize": 4,
+    "updateEverySecond": "true"
+}
