@@ -72,13 +72,13 @@
                 },
                 {
                     "type": "raw",
-                    "name": "DATA_FEMALE_TILESHEET",
-                    "file": "data/sprite/Female/Tilesheet.bin"
+                    "name": "DATA_LEAF_TILESHEET",
+                    "file": "data/sprite/Leaf/Tilesheet.bin"
                 },
                 {
                     "type": "raw",
-                    "name": "DATA_MALE_TILESHEET",
-                    "file": "data/sprite/Male/Tilesheet.bin"
+                    "name": "DATA_RED_TILESHEET",
+                    "file": "data/sprite/Red/Tilesheet.bin"
                 }
             ]
         }

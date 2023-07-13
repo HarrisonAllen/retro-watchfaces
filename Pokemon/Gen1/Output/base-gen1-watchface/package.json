@@ -62,13 +62,53 @@
                 },
                 {
                     "type": "raw",
-                    "name": "DATA_FEMALE_TILESHEET",
-                    "file": "data/sprite/Female/Tilesheet.bin"
+                    "name": "DATA_ROUTE1~BW_TILESHEET",
+                    "file": "data/backgrounds/Route1~bw/Tilesheet.bin"
                 },
                 {
                     "type": "raw",
-                    "name": "DATA_MALE_TILESHEET",
-                    "file": "data/sprite/Male/Tilesheet.bin"
+                    "name": "DATA_ROUTE1~BW_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/Route1~bw/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE1~BW_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/Route1~bw/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE1~BW_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/Route1~bw/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE1~BW_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/Route1~bw/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE1~BW_NUMBERMAPS",
+                    "file": "data/backgrounds/Route1~bw/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_LEAF_TILESHEET",
+                    "file": "data/sprite/Leaf/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_LEAF~BW_TILESHEET",
+                    "file": "data/sprite/Leaf~bw/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_RED_TILESHEET",
+                    "file": "data/sprite/Red/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_RED~BW_TILESHEET",
+                    "file": "data/sprite/Red~bw/Tilesheet.bin"
                 }
             ]
         }

@@ -74,6 +74,12 @@ static void sprite_actor_init(SpriteActor *sprite_actor, GBC_Graphics *gbc_graph
     sprite_actor->mosaic_x = 0;
     sprite_actor->mosaic_y = 0;
     sprite_actor->state = AS_OFFSCREEN;
+    // TODO: Add sprite_actor->num_frames
+    // And then have a frame state with:
+    // - y offset
+    // - x offset
+    // - sprite_num
+    // May need to do a malloc/free workflow
 }
 
 static void sprite_actor_render(SpriteActor *sprite_actor, GBC_Graphics *gbc_graphics) {

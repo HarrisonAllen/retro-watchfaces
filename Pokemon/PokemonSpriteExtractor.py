@@ -300,6 +300,26 @@ def create_sprite_palette_bytes(palette):
         palette_array.append(convert_rgba_to_pebble_color(color))
     return bytes(palette_array)
 
+def convert_rgba_to_bw_pebble_color(color):
+    color_sum = 0
+    color_sum += color[0] / 85 # R
+    color_sum += color[1] / 85 # G
+    color_sum += color[2] / 85 # B
+    color_average = round(color_sum / 3)
+    if color_average > 0:
+        color_average = min(color_average + 1, 0b11)
+    return color_average
+
+def create_sprite_bw_palette_bytes(palette):
+    palette_array = []
+    for i in range(COLORS_PER_PALETTE):
+        if i >= len(palette):
+            color = (0, 0, 0, 0)
+        else:
+            color = palette[i]
+        palette_array.append(convert_rgba_to_bw_pebble_color(color))
+    return bytes(palette_array)
+
 def append_sprite_data_to_file(sprite_data_filename, sprite_tilesheet_offset_bytes, sprite_dims_byte, sprite_palette_bytes):
     with open(sprite_data_filename, "ab") as f_out:
         f_out.write(sprite_tilesheet_offset_bytes)
@@ -309,6 +329,24 @@ def append_sprite_data_to_file(sprite_data_filename, sprite_tilesheet_offset_byt
 def append_sprite_name_to_list(sprite_list_filename, sprite_name):
     with open(sprite_list_filename, "a") as f_out:
         f_out.write(sprite_name + "\n")
+
+def add_outline_to_images(images):
+    outlined_images = []
+    for image in images:
+        image = image.convert("RGBA")
+        outline = image.filter(ImageFilter.FIND_EDGES).convert("RGBA")
+        data = outline.getdata()
+
+        new_data = []
+        for item in data:
+            if item[3] != 0:
+                new_data.append((0, 0, 0, 255))
+            else:
+                new_data.append((0, 0, 0, 0))
+
+        outline.putdata(new_data)
+        outlined_images.append(alpha_composite_images([image, outline]))
+    return outlined_images
 
 FILTER_BLACKLIST = [
     "003_1", # Not different enough
@@ -392,12 +430,18 @@ def convert_sprites(input_directory, output_directory):
 
     sprite_tilesheet_filename = os.path.join(generation_directory, "SpriteTilesheet.bin")
     open(sprite_tilesheet_filename, "wb").close()
+    sprite_tilesheet_bw_filename = os.path.join(generation_directory, "SpriteTilesheet~bw.bin")
+    open(sprite_tilesheet_bw_filename, "wb").close()
     sprite_data_filename = os.path.join(generation_directory, "SpriteData.bin")
     open(sprite_data_filename, "wb").close()
+    sprite_data_bw_filename = os.path.join(generation_directory, "SpriteData~bw.bin")
+    open(sprite_data_bw_filename, "wb").close()
     sprite_list_filename = os.path.join(generation_directory, "SpriteList.txt")
     open(sprite_list_filename, "w").close()
     sprite_image_directory = os.path.join(generation_directory, f"SpriteImages")
     os.makedirs(sprite_image_directory)
+    sprite_image_bw_directory = os.path.join(generation_directory, f"SpriteImages~bw")
+    os.makedirs(sprite_image_bw_directory)
 
     for pokemon_directory in pokemon_directories:
         # pokemon_output_directory = os.path.join(output_directory, os.path.basename(os.path.dirname(pokemon_directory)))
@@ -441,8 +485,13 @@ def convert_sprites(input_directory, output_directory):
             #     continue
             converted_images = convert_images_to_pebble_colors(cropped_images)
             pokemon_palette, final_pokemon_images = extract_palette_from_images(converted_images)
+            outlined_images = add_outline_to_images(cropped_images)
+            converted_bw_images = convert_images_to_pebble_colors(outlined_images)
+            bw_pokemon_palette, bw_pokemon_images = extract_palette_from_images(converted_bw_images)
             for i in range(len(final_pokemon_images)):
                 final_pokemon_images[i].save(os.path.join(sprite_image_directory, f"{pokemon_sub_number}_{i}.png"))
+                bw_pokemon_images[i].save(os.path.join(sprite_image_bw_directory, f"{pokemon_sub_number}_{i}.png"))
+
             # print(f"\t{len(pokemon_palette)} colors")
             
             pokemon_tiles = extract_tiles_from_images(final_pokemon_images)
@@ -455,16 +504,24 @@ def convert_sprites(input_directory, output_directory):
             sprite_dims_byte = int(sprite_width | (sprite_height << 4)).to_bytes(1, "big")
             sprite_palette_bytes = create_sprite_palette_bytes(pokemon_palette)
             append_sprite_data_to_file(sprite_data_filename, sprite_tilesheet_offset_bytes, sprite_dims_byte, sprite_palette_bytes)
+            
+            # Do it again for bw
+            bw_pokemon_tiles = extract_tiles_from_images(bw_pokemon_images)
+            # Append tiles to a generation tilesheet
+            append_tiles_to_tilesheet(sprite_tilesheet_bw_filename, bw_pokemon_tiles, bw_pokemon_palette)
+            # Append sprite data to a generation sprite sheet
+            sprite_tilesheet_offset_bytes = tilesheet_offset.to_bytes(2, "big")
+            sprite_width = bw_pokemon_images[0].size[0] // TILE_WIDTH - 1
+            sprite_height = bw_pokemon_images[0].size[1] // TILE_HEIGHT - 1
+            sprite_dims_byte = int(sprite_width | (sprite_height << 4)).to_bytes(1, "big")
+            # Append black and white sprite data to a generation sprite sheet
+            sprite_bw_palette_bytes = create_sprite_bw_palette_bytes(bw_pokemon_palette)
+            append_sprite_data_to_file(sprite_data_bw_filename, sprite_tilesheet_offset_bytes, sprite_dims_byte, sprite_bw_palette_bytes)
+
             # Write pokemon name to the generation name list
             append_sprite_name_to_list(sprite_list_filename, pokemon_sub_number)
             num_sprites += 1
             tilesheet_offset += len(pokemon_tiles)
-            # Now, write these tiles to a tilesheet
-            # append that tileshet to a mega tilesheet
-            # generate a sprite data chunk:
-            # - sprite tile offset in the tilesheet (2 bytes)
-            # - sprite width/height (1 byte)
-            # - sprite palette (16 bytes)
 
         if (int(pokemon_number)) == LAST_NUMBER_IN_EACH_GENERATION[current_gen]:
             tiles_per_generation.append(tilesheet_offset)
@@ -482,12 +539,18 @@ def convert_sprites(input_directory, output_directory):
 
             sprite_tilesheet_filename = os.path.join(generation_directory, "SpriteTilesheet.bin")
             open(sprite_tilesheet_filename, "wb").close()
+            sprite_tilesheet_bw_filename = os.path.join(generation_directory, "SpriteTilesheet~bw.bin")
+            open(sprite_tilesheet_bw_filename, "wb").close()
             sprite_data_filename = os.path.join(generation_directory, "SpriteData.bin")
             open(sprite_data_filename, "wb").close()
+            sprite_data_bw_filename = os.path.join(generation_directory, "SpriteData~bw.bin")
+            open(sprite_data_bw_filename, "wb").close()
             sprite_list_filename = os.path.join(generation_directory, "SpriteList.txt")
             open(sprite_list_filename, "w").close()
             sprite_image_directory = os.path.join(generation_directory, f"SpriteImages")
             os.makedirs(sprite_image_directory)
+            sprite_image_bw_directory = os.path.join(generation_directory, f"SpriteImages~bw")
+            os.makedirs(sprite_image_bw_directory)
             
             # For each sprite: 
             # - Find palette
