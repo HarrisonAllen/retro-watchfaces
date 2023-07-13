@@ -1,8 +1,8 @@
 BACKGROUND_TEMPLATE = \
 """
-static void load_{background_group}(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) {{
+static uint16_t load_{background_group}(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) {{
     // Load {background_group} tilesheet
-    load_tilesheet(gbc_graphics, RESOURCE_ID_DATA_{uppercase_background_group}_TILESHEET, 0, 0, 0);
+    uint16_t loaded_tiles = load_tilesheet(gbc_graphics, RESOURCE_ID_DATA_{uppercase_background_group}_TILESHEET, 0, 0, 0);
 
     // Load {background_group} palettes
     for (uint8_t p = 0; p < GBC_PALETTE_NUM_PALETTES; p++) {{
@@ -17,6 +17,7 @@ static void load_{background_group}(GBC_Graphics *gbc_graphics, uint8_t *numbers
     
     // Load {background_group} numbers
     load_resource(gbc_graphics, RESOURCE_ID_DATA_{uppercase_background_group}_NUMBERMAPS, numbers_buffer);
+    return loaded_tiles;
 }}
 
 """

@@ -227,7 +227,7 @@ def add_resource_to_backgrounds_h(backgrounds_h_filename, background_group):
 
 def add_loader_info_to_backgrounds_h(backgrounds_h_filename, background_groups):
     loader_info = f"#define NUM_BACKGROUND_GROUPS {len(background_groups)}\n\n"
-    loader_info += f"void (*LOAD_BACKGROUND_GROUP[{len(background_groups)}])(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) = {{\n"
+    loader_info += f"uint16_t (*LOAD_BACKGROUND_GROUP[{len(background_groups)}])(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) = {{\n"
     for background_group in background_groups:
         loader_info += f"    load_{background_group},\n"
     loader_info += "};\n"
