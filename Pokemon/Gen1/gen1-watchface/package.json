@@ -1,14 +1,19 @@
 {
-    "name": "base-gen1-watchface",
+    "name": "gen1-watchface",
     "author": "Harrison Allen",
     "version": "1.0.0",
     "keywords": [
         "pebble-app"
     ],
     "private": true,
-    "dependencies": {},
+    "dependencies": {
+        "pebble-clay": "^1.0.4"
+    },
+    "capabilities": [
+        "configurable"
+    ],
     "pebble": {
-        "displayName": "Pokemon Generation 1 - Retro Series",
+        "displayName": "Pokemon Gen 1 - Retro Series",
         "uuid": "49967d45-1fdd-49b0-8583-c158bac2806d",
         "sdkVersion": "3",
         "enableMultiJS": true,
@@ -21,19 +26,27 @@
             "watchface": true
         },
         "messageKeys": [
-            "dummy"
+            "CharacterSelection",
+            "PokemonSelection1",
+            "PokemonChoice1",
+            "PokemonSelection2",
+            "PokemonChoice2",
+            "PokemonSelection3",
+            "PokemonChoice3",
+            "StepSeconds",
+            "ChangeMinutes"
         ],
         "resources": {
             "media": [
                 {
-                  "type": "raw",
-                  "name": "DATA_SPRITE_TILESHEET",
-                  "file": "data/SpriteTilesheet.bin"
+                    "type": "raw",
+                    "name": "DATA_SPRITE_TILESHEET",
+                    "file": "data/SpriteTilesheet.bin"
                 },
                 {
-                  "type": "raw",
-                  "name": "DATA_SPRITE_DATA",
-                  "file": "data/SpriteData.bin"
+                    "type": "raw",
+                    "name": "DATA_SPRITE_DATA",
+                    "file": "data/SpriteData.bin"
                 },
                 {
                     "type": "raw",

@@ -7,6 +7,16 @@
 #include "resources/PokemonSprites.h"
 #include "pebble-gbc-graphics-advanced/pebble-gbc-graphics-advanced.h"
 
+typedef struct ClaySettings {
+    int CharacterSelection;
+    int PokemonChoices[NUM_POKEMON_SPRITE_ACTORS];
+    int PokemonSelections[NUM_POKEMON_SPRITE_ACTORS];
+    int StepSeconds;
+    int ChangeMinutes;
+} ClaySettings;
+
+static ClaySettings settings;
+
 static Window *s_window;
 static GBC_Graphics *s_gbc_graphics;
 static AppTimer *s_frame_timer;
@@ -26,7 +36,7 @@ static bool changing_backgrounds = false;
 static short mask_level = 0;
 static short mask_change = 1;
 
-static uint8_t last_background_group, last_sprite_group;
+static uint8_t last_background_group;
 
 static void initialize_sprites(uint16_t trainer_vram_offset);
 
@@ -124,21 +134,6 @@ static void update_backgrounds() {
     load_time();
 }
 
-// TODO: Pokemanz
-static void load_new_sprite(SpriteActor *sprite_actor) {
-    uint8_t new_sprite_group = rand() % NUM_SPRITE_GROUPS;
-    while (new_sprite_group == last_sprite_group) {
-        new_sprite_group = rand() % NUM_SPRITE_GROUPS;
-    }
-    (*LOAD_SPRITE_GROUP[new_sprite_group])(s_gbc_graphics,
-                                           sprite_actor->vram_bank, 
-                                           sprite_actor->vram_bank_offset,
-                                           sprite_actor->palette, 
-                                           &(sprite_actor->num_sprites), 
-                                           &(sprite_actor->data));
-    last_sprite_group = new_sprite_group;
-}
-
 static void step() {
     GRect bounds = GBC_Graphics_get_screen_bounds(s_gbc_graphics);
     if (!changing_sprites && !changing_backgrounds) {
@@ -228,7 +223,6 @@ static void frame_timer_handle(void* context) {
     }
 }
 
-
 static void start_changing_sprites() {
     changing_sprites = true;
     if (s_frame_timer == NULL)
@@ -254,19 +248,17 @@ static void render_sprites() {
 }
 
 static void initialize_sprites(uint16_t trainer_vram_offset) {
-    // 1. Create trainer sprite actor
-    // 2. Create pokemon sprite actors
-    // 3. Calculate width of all sprite actors side by side
-    // 4. Calculate center xs such that trainer is at most at right edge, but
-    //    ideally the sprite group is in the center
-    // 5. Distribute sprites equally
-    // 6. Set all sprites visible and ready to walk on
     uint8_t vram_bank = 0;
     uint8_t vram_start_offset = trainer_vram_offset;
     uint8_t palette_num = 0;
     uint8_t num_sprites;
     const uint8_t *sprite_data;
-    uint8_t new_sprite_group = rand() % NUM_SPRITE_GROUPS;
+    uint8_t new_sprite_group;
+    if (settings.CharacterSelection == CHARACTER_RANDOM) {
+        new_sprite_group = rand() % NUM_SPRITE_GROUPS;
+    } else {
+        new_sprite_group = settings.CharacterSelection - 1;
+    }
     (*LOAD_SPRITE_GROUP[new_sprite_group])(s_gbc_graphics, vram_bank, vram_start_offset, palette_num, &num_sprites, &sprite_data);
     sprite_actor_init(trainer_sprite_actor,
                         s_gbc_graphics,
@@ -282,8 +274,12 @@ static void initialize_sprites(uint16_t trainer_vram_offset) {
         vram_bank = i+1;
         vram_start_offset = 0;
         palette_num = i+1;
-        // Load pokemon sprite, use data array pointers
-        int pokemon_number = rand() % NUM_POKEMON;
+        int pokemon_number;
+        if (settings.PokemonSelections[i] == POKEMON_RANDOM) {
+            pokemon_number = rand() % NUM_POKEMON;
+        } else {
+            pokemon_number = settings.PokemonChoices[i];
+        }
         load_pokemon_sprite(s_gbc_graphics, pokemon_number, vram_bank, vram_start_offset, i+1, pokemon_data_buffers[i]);
         
         sprite_actor_init(&pokemon_sprite_actors[i], 
@@ -294,11 +290,17 @@ static void initialize_sprites(uint16_t trainer_vram_offset) {
                         NUM_POKEMON_FRAMES,
                         pokemon_data_buffers[i],
                         palette_num);
+        if (settings.PokemonSelections[i] == POKEMON_NONE) {
+            pokemon_sprite_actors[i].hidden = true;
+            pokemon_sprite_actors[i].state = AS_HIDDEN;
+        }
     }
 
     int total_width = 0;
     for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
-        total_width += sprite_actors[i].width + PIXELS_BETWEEN_SPRITES;
+        if (sprite_actors[i].state != AS_HIDDEN) {
+            total_width += sprite_actors[i].width + PIXELS_BETWEEN_SPRITES;
+        }
     }
     GRect bounds = GBC_Graphics_get_screen_bounds(s_gbc_graphics);
     int total_sprite_offset_x;
@@ -307,28 +309,110 @@ static void initialize_sprites(uint16_t trainer_vram_offset) {
     } else {
         total_sprite_offset_x = (bounds.size.w / 2) + total_width / 2 + GBC_SPRITE_OFFSET_X;
     }
-    int sprite_offset_x = total_sprite_offset_x;
+    int sprite_offset_x = total_sprite_offset_x - PIXELS_BETWEEN_SPRITES;
 
     for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
-        sprite_actors[i].state = AS_WALK_ON;
-        sprite_actors[i].hidden = false;
-        sprite_actors[i].center_x = sprite_offset_x - sprite_actors[i].width;
-        sprite_actors[i].x = GBC_SPRITE_OFFSET_X - (total_sprite_offset_x - sprite_offset_x) - sprite_actors[i].width;
-        sprite_offset_x -= (sprite_actors[i].width + PIXELS_BETWEEN_SPRITES);
-        sprite_actors[i].frame = i % sprite_actors[i].num_sprites;
+        if (sprite_actors[i].state != AS_HIDDEN) {
+            sprite_actors[i].state = AS_WALK_ON;
+            sprite_actors[i].hidden = false;
+            sprite_actors[i].center_x = sprite_offset_x - sprite_actors[i].width;
+            sprite_actors[i].x = GBC_SPRITE_OFFSET_X - (total_sprite_offset_x - sprite_offset_x) - sprite_actors[i].width;
+            sprite_offset_x -= (sprite_actors[i].width + PIXELS_BETWEEN_SPRITES);
+            sprite_actors[i].frame = i % sprite_actors[i].num_sprites;
+        }
     }
 
     render_sprites();
     start_changing_sprites();
 }
 
+
+static void reload_sprites(uint16_t trainer_vram_offset) {
+    uint8_t vram_bank = 0;
+    uint8_t vram_start_offset = trainer_vram_offset;
+    uint8_t palette_num = 0;
+    uint8_t num_sprites;
+    const uint8_t *sprite_data;
+    uint8_t new_sprite_group;
+    uint8_t old_frame_start = trainer_sprite_actor->frame;
+    if (settings.CharacterSelection == CHARACTER_RANDOM) {
+        new_sprite_group = rand() % NUM_SPRITE_GROUPS;
+    } else {
+        new_sprite_group = settings.CharacterSelection - 1;
+    }
+    (*LOAD_SPRITE_GROUP[new_sprite_group])(s_gbc_graphics, vram_bank, vram_start_offset, palette_num, &num_sprites, &sprite_data);
+    sprite_actor_init(trainer_sprite_actor,
+                        s_gbc_graphics,
+                        0,
+                        vram_bank,
+                        vram_start_offset,
+                        num_sprites,
+                        sprite_data,
+                        palette_num);
+    
+    
+    for (uint8_t i = 0; i < NUM_POKEMON_SPRITE_ACTORS; i++) {
+        vram_bank = i+1;
+        vram_start_offset = 0;
+        palette_num = i+1;
+        int pokemon_number;
+        if (settings.PokemonSelections[i] == POKEMON_RANDOM) {
+            pokemon_number = rand() % NUM_POKEMON;
+        } else {
+            pokemon_number = settings.PokemonChoices[i];
+        }
+        load_pokemon_sprite(s_gbc_graphics, pokemon_number, vram_bank, vram_start_offset, i+1, pokemon_data_buffers[i]);
+        
+        sprite_actor_init(&pokemon_sprite_actors[i], 
+                        s_gbc_graphics,
+                        i+1,
+                        vram_bank,
+                        vram_start_offset,
+                        NUM_POKEMON_FRAMES,
+                        pokemon_data_buffers[i],
+                        palette_num);
+        if (settings.PokemonSelections[i] == POKEMON_NONE) {
+            pokemon_sprite_actors[i].hidden = true;
+            pokemon_sprite_actors[i].state = AS_HIDDEN;
+        }
+    }
+
+    int total_width = 0;
+    for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
+        if (sprite_actors[i].state != AS_HIDDEN) {
+            total_width += sprite_actors[i].width + PIXELS_BETWEEN_SPRITES;
+        }
+    }
+    GRect bounds = GBC_Graphics_get_screen_bounds(s_gbc_graphics);
+    int total_sprite_offset_x;
+    if (total_width > bounds.size.w) {
+        total_sprite_offset_x = bounds.size.w;
+    } else {
+        total_sprite_offset_x = (bounds.size.w / 2) + total_width / 2 + GBC_SPRITE_OFFSET_X;
+    }
+    int sprite_offset_x = total_sprite_offset_x - PIXELS_BETWEEN_SPRITES;
+
+    for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
+        if (sprite_actors[i].state != AS_HIDDEN) {
+            sprite_actors[i].state = AS_WALK;
+            sprite_actors[i].hidden = false;
+            sprite_actors[i].center_x = sprite_offset_x - sprite_actors[i].width;
+            sprite_actors[i].x = sprite_actors[i].center_x;
+            sprite_offset_x -= (sprite_actors[i].width + PIXELS_BETWEEN_SPRITES);
+            sprite_actors[i].frame = old_frame_start + (i % sprite_actors[i].num_sprites);
+        }
+    }
+
+    render_sprites();
+}
+
 static void time_handler(struct tm *tick_time, TimeUnits units_changed) {
-    if (units_changed & HOUR_UNIT) {
+    if ((units_changed & MINUTE_UNIT) && (settings.ChangeMinutes > 0) && ((tick_time->tm_min % settings.ChangeMinutes) == 0)) {
         start_changing_backgrounds();
     }
 
     if (!changing_sprites) {
-        if (units_changed & MINUTE_UNIT) {
+        if ((units_changed & MINUTE_UNIT) && (settings.ChangeMinutes > 0) && ((tick_time->tm_min % settings.ChangeMinutes) == 0)) {
             for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
                 if (sprite_actors[i].state == AS_OFFSCREEN) {
                     sprite_actors[i].state = AS_WALK_ON;
@@ -338,9 +422,11 @@ static void time_handler(struct tm *tick_time, TimeUnits units_changed) {
                 }
             }
             start_changing_sprites();
-        }
-        if (tick_time->tm_sec % SECONDS_BETWEEN_STEPS == 0) {
+        } else if ((tick_time->tm_sec % settings.StepSeconds) == 0) {
             sprite_stepping = true;
+            if (DEMO_MODE) {
+                reload_sprites(s_num_background_tiles);
+            }
             step();
         }
     }
@@ -391,7 +477,91 @@ static void window_unload(Window *window) {
     GBC_Graphics_destroy(s_gbc_graphics);
 }
 
+static void default_settings() {
+    settings.CharacterSelection = CHARACTER_RANDOM;
+    settings.PokemonSelections[0] = POKEMON_RANDOM;
+    settings.PokemonChoices[0] = 0;
+    settings.PokemonSelections[1] = POKEMON_RANDOM;
+    settings.PokemonChoices[1] = 3;
+    settings.PokemonSelections[2] = POKEMON_RANDOM;
+    settings.PokemonChoices[2] = 6;
+    settings.StepSeconds = 1;
+    settings.ChangeMinutes = 1;
+}
+
+static void load_settings() {
+    default_settings();
+    persist_read_data(SETTINGS_KEY, &settings, sizeof(settings));
+}
+
+static void save_settings() {
+    persist_write_data(SETTINGS_KEY, &settings, sizeof(settings));
+    if (!changing_sprites) {
+        for (uint8_t i = 0; i < NUM_SPRITE_ACTORS; i++) {
+            if (sprite_actors[i].state == AS_OFFSCREEN) {
+                sprite_actors[i].state = AS_WALK_ON;
+                sprite_actors[i].hidden = false;
+            } else if (sprite_actors[i].state == AS_WALK) {
+                sprite_actors[i].state = AS_WALK_OFF;
+            }
+        }
+        start_changing_sprites();
+    }
+}
+
+static void inbox_received_handler(DictionaryIterator *iter, void *context) {
+    Tuple *character_selection_t = dict_find(iter, MESSAGE_KEY_CharacterSelection);
+    if (character_selection_t) {
+        settings.CharacterSelection = atoi(character_selection_t->value->cstring);
+    }
+
+    Tuple *pokemon_selection_1_t = dict_find(iter, MESSAGE_KEY_PokemonSelection1);
+    if (pokemon_selection_1_t) {
+        settings.PokemonSelections[0] = atoi(pokemon_selection_1_t->value->cstring);
+    }
+
+    Tuple *pokemon_choice_1_t = dict_find(iter, MESSAGE_KEY_PokemonChoice1);
+    if (pokemon_choice_1_t) {
+        settings.PokemonChoices[0] = atoi(pokemon_choice_1_t->value->cstring);
+    }
+
+    Tuple *pokemon_selection_2_t = dict_find(iter, MESSAGE_KEY_PokemonSelection2);
+    if (pokemon_selection_2_t) {
+        settings.PokemonSelections[1] = atoi(pokemon_selection_2_t->value->cstring);
+    }
+
+    Tuple *pokemon_choice_2_t = dict_find(iter, MESSAGE_KEY_PokemonChoice2);
+    if (pokemon_choice_2_t) {
+        settings.PokemonChoices[1] = atoi(pokemon_choice_2_t->value->cstring);
+    }
+
+    Tuple *pokemon_selection_3_t = dict_find(iter, MESSAGE_KEY_PokemonSelection3);
+    if (pokemon_selection_3_t) {
+        settings.PokemonSelections[2] = atoi(pokemon_selection_3_t->value->cstring);
+    }
+
+    Tuple *pokemon_choice_3_t = dict_find(iter, MESSAGE_KEY_PokemonChoice3);
+    if (pokemon_choice_3_t) {
+        settings.PokemonChoices[2] = atoi(pokemon_choice_3_t->value->cstring);
+    }
+
+    Tuple *step_seconds_t = dict_find(iter, MESSAGE_KEY_StepSeconds);
+    if (step_seconds_t) {
+        settings.StepSeconds = atoi(step_seconds_t->value->cstring);
+    }
+
+    Tuple *change_minutes_t = dict_find(iter, MESSAGE_KEY_ChangeMinutes);
+    if (change_minutes_t) {
+        settings.ChangeMinutes = atoi(change_minutes_t->value->cstring);
+    }
+
+    save_settings();
+}
+
 static void init(void) {
+    load_settings();
+    app_message_register_inbox_received(inbox_received_handler);
+    app_message_open(128, 128);
     s_window = window_create();
 
     window_set_window_handlers(s_window, (WindowHandlers) {

@@ -25,55 +25,17 @@
 #define SPRITE_DATA_BYTES 19
 #define SPRITE_BOTTOM_Y 130
 
-#if defined(PBL_COLOR)
-static uint8_t full_palette[] = {
-    0b11110000,
-    0b11110100,
-    0b11111000,
-    0b11111100,
-    0b11101100,
-    0b11011100,
-    0b11001100,
-    0b11001101,
-    0b11001110,
-    0b11001111,
-    0b11001011,
-    0b11000111,
-    0b11000011,
-    0b11010011,
-    0b11100011,
-    0b11110011
-};
-#else
-static uint8_t full_palette[] = {
-    GBC_COLOR_BLACK,
-    GBC_COLOR_BLACK,
-    GBC_COLOR_BLACK,
-    GBC_COLOR_BLACK,
-    GBC_COLOR_GRAY,
-    GBC_COLOR_GRAY,
-    GBC_COLOR_GRAY,
-    GBC_COLOR_GRAY,
-    GBC_COLOR_WHITE,
-    GBC_COLOR_WHITE,
-    GBC_COLOR_WHITE,
-    GBC_COLOR_WHITE,
-    GBC_COLOR_GRAY,
-    GBC_COLOR_GRAY,
-    GBC_COLOR_GRAY,
-    GBC_COLOR_GRAY
-};
-#endif
-
 static Window *s_window;
 static GBC_Graphics *s_gbc_graphics;
 static AppTimer *s_frame_timer;  // The timer used to setup the game step callback
-bool sprite_reverse;
-int sprite_min = X_OFFSET + GBC_SPRITE_OFFSET_X + 10;
-int sprite_max = X_OFFSET + GBC_SPRITE_OFFSET_X;
-int sprite_layer = NUM_BACKGROUNDS - 1;
-int sprite_index = 0;
-int sprite_num = 0;
+static bool sprite_reverse;
+static int sprite_min = X_OFFSET + GBC_SPRITE_OFFSET_X + 10;
+static int sprite_max = X_OFFSET + GBC_SPRITE_OFFSET_X;
+static int sprite_layer = NUM_BACKGROUNDS - 1;
+static int sprite_index = 0;
+static int sprite_num = 0;
+
+static int s_character_selection = 0;
 
 /**
  * Loads a tilesheet from the resources into a VRAM bank
@@ -194,6 +156,7 @@ static void window_unload(Window *window) {
     // Destroy the GBC_Graphics object
     GBC_Graphics_destroy(s_gbc_graphics);
 }
+
 
 static void init(void) {
     s_window = window_create();

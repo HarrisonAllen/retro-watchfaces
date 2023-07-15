@@ -9,7 +9,8 @@ typedef enum {
     AS_WALK_ON,
     AS_WALK,
     AS_WALK_OFF,
-    AS_OFFSCREEN
+    AS_OFFSCREEN,
+    AS_HIDDEN
 } ActorState;
 
 typedef struct {
@@ -74,12 +75,6 @@ static void sprite_actor_init(SpriteActor *sprite_actor, GBC_Graphics *gbc_graph
     sprite_actor->mosaic_x = 0;
     sprite_actor->mosaic_y = 0;
     sprite_actor->state = AS_OFFSCREEN;
-    // TODO: Add sprite_actor->num_frames
-    // And then have a frame state with:
-    // - y offset
-    // - x offset
-    // - sprite_num
-    // May need to do a malloc/free workflow
 }
 
 static void sprite_actor_render(SpriteActor *sprite_actor, GBC_Graphics *gbc_graphics) {
@@ -101,7 +96,9 @@ static void sprite_actor_render(SpriteActor *sprite_actor, GBC_Graphics *gbc_gra
 }
 
 static void sprite_actor_take_step(SpriteActor *sprite_actor) {
-    sprite_actor->frame = (sprite_actor->frame + 1) % sprite_actor->num_sprites;
+    if (sprite_actor->state != AS_HIDDEN) {
+        sprite_actor->frame = (sprite_actor->frame + 1) % sprite_actor->num_sprites;
+    }
 }
 
 static void sprite_actor_reset(SpriteActor *sprite_actor) {
