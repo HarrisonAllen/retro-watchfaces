@@ -6,7 +6,7 @@
 #include "Palettes.h"
 #include "Defines.h"
 
-static uint16_t load_Route1(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) {
+static uint16_t load_Route1(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer, uint8_t *little_numbers_buffer) {
     // Load Route1 tilesheet
     uint16_t loaded_tiles = load_tilesheet(gbc_graphics, RESOURCE_ID_DATA_ROUTE1_TILESHEET, 0, 0, 0);
 
@@ -23,11 +23,12 @@ static uint16_t load_Route1(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer)
     
     // Load Route1 numbers
     load_resource(gbc_graphics, RESOURCE_ID_DATA_ROUTE1_NUMBERMAPS, numbers_buffer);
+    load_resource(gbc_graphics, RESOURCE_ID_DATA_ROUTE1_LITTLENUMBERMAPS, little_numbers_buffer);
     return loaded_tiles;
 }
 
 
-static uint16_t load_Route1~bw(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer) {
+static uint16_t load_Route1~bw(GBC_Graphics *gbc_graphics, uint8_t *numbers_buffer, uint8_t *little_numbers_buffer) {
     // Load Route1~bw tilesheet
     uint16_t loaded_tiles = load_tilesheet(gbc_graphics, RESOURCE_ID_DATA_ROUTE1~BW_TILESHEET, 0, 0, 0);
 
@@ -44,6 +45,7 @@ static uint16_t load_Route1~bw(GBC_Graphics *gbc_graphics, uint8_t *numbers_buff
     
     // Load Route1~bw numbers
     load_resource(gbc_graphics, RESOURCE_ID_DATA_ROUTE1~BW_NUMBERMAPS, numbers_buffer);
+    load_resource(gbc_graphics, RESOURCE_ID_DATA_ROUTE1~BW_LITTLENUMBERMAPS, little_numbers_buffer);
     return loaded_tiles;
 }
 

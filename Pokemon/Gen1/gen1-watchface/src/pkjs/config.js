@@ -863,6 +863,30 @@ module.exports = [
             }
         ]
     },
+
+	// Date
+	{
+	  "type": "section",
+	  "items": [
+		{
+		  "type": "heading",
+		  "defaultValue": "Date"
+		},
+		{
+		  "type": "toggle",
+		  "messageKey": "ShowDate",
+		  "label": "Display the date",
+		  "defaultValue": true,
+		},
+		{
+		  "type": "toggle",
+		  "messageKey": "AmericanDateFormat",
+		  "label": "Use American date format",
+		  "defaultValue": true,
+		  "description": "Set true for 'month/day', false for 'day/month'"
+		}
+	  ]
+	},
 	{
 	  "type": "submit",
 	  "defaultValue": "Save Settings"

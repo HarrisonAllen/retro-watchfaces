@@ -1,7 +1,7 @@
 {
     "name": "gen1-watchface",
     "author": "Harrison Allen",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "keywords": [
         "pebble-app"
     ],
@@ -34,7 +34,9 @@
             "PokemonSelection3",
             "PokemonChoice3",
             "StepSeconds",
-            "ChangeMinutes"
+            "ChangeMinutes",
+            "ShowDate",
+            "AmericanDateFormat"
         ],
         "resources": {
             "media": [
@@ -82,6 +84,11 @@
                     "type": "raw",
                     "name": "DATA_ROUTE1_NUMBERMAPS",
                     "file": "data/backgrounds/Route1/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE1_LITTLENUMBERMAPS",
+                    "file": "data/backgrounds/Route1/LittleNumberMaps.bin"
                 },
                 {
                     "type": "raw",

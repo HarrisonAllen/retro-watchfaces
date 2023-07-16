@@ -2,7 +2,7 @@
 
 ![Banner](appstore/banner/Banner.png)
 
-![Basalt](appstore/basalt.gif) ![Chalk](appstore/chalk.gif) ![Diorite](appstore/diorite.gif)
+![Basalt](appstore/basalt_date.gif) ![Chalk](appstore/chalk_date.gif) ![Diorite](appstore/diorite_date.gif)
 
 Pokemon Generation 1 - Retro Series
 Choose your Pokemon!

@@ -13,6 +13,8 @@ typedef struct ClaySettings {
     int PokemonSelections[NUM_POKEMON_SPRITE_ACTORS];
     int StepSeconds;
     int ChangeMinutes;
+    bool ShowDate;
+    bool AmericanDateFormat;
 } ClaySettings;
 
 static ClaySettings settings;
@@ -22,6 +24,7 @@ static GBC_Graphics *s_gbc_graphics;
 static AppTimer *s_frame_timer;
 
 static uint8_t s_number_buffer[NUMBER_HEIGHT * NUMBER_WIDTH * TOTAL_NUMBERS * 2];
+static uint8_t s_little_number_buffer[LITTLE_NUMBER_HEIGHT * LITTLE_NUMBER_WIDTH* TOTAL_LITTLE_NUMBERS * 2];
 
 SpriteActor sprite_actors[NUM_SPRITE_ACTORS];
 SpriteActor *trainer_sprite_actor = &sprite_actors[0];
@@ -41,9 +44,11 @@ static uint8_t last_background_group;
 static void initialize_sprites(uint16_t trainer_vram_offset);
 
 static void draw_number(uint8_t background, uint8_t tile_x, uint8_t tile_y, char number) {
-    uint8_t number_value;
+    int number_value;
     if (number == ':') {
         number_value = 10;
+    } else if (number == ' ') {
+        number_value = -1;
     } else {
         number_value = number - '0';
     }
@@ -52,10 +57,42 @@ static void draw_number(uint8_t background, uint8_t tile_x, uint8_t tile_y, char
     int tile_index;
     for (uint8_t y = 0; y < NUMBER_HEIGHT; y++) {
         for (uint8_t x = 0; x < NUMBER_WIDTH; x++) {
-            tile_index = number_value * NUMBER_HEIGHT * NUMBER_WIDTH * 2 + x * 2 + y * NUMBER_WIDTH * 2;
-            tile = s_number_buffer[tile_index];
-            attr = s_number_buffer[tile_index + 1];
-            GBC_Graphics_bg_set_tile_and_attrs(s_gbc_graphics, background, x + tile_x, y + tile_y, tile, attr);
+            if (number_value >= 0) {
+                tile_index = number_value * NUMBER_HEIGHT * NUMBER_WIDTH * 2 + x * 2 + y * NUMBER_WIDTH * 2;
+                tile = s_number_buffer[tile_index];
+                attr = s_number_buffer[tile_index + 1];
+                GBC_Graphics_bg_set_tile_and_attrs(s_gbc_graphics, background, x + tile_x, y + tile_y, tile, attr);
+            } else {
+                GBC_Graphics_bg_set_tile_hidden(s_gbc_graphics, background, x + tile_x, y + tile_y, true);
+            }
+        }
+    }
+}
+
+static void draw_little_number(uint8_t background, uint8_t tile_x, uint8_t tile_y, char number) {
+    int number_value;
+    if (number == '[') {
+        number_value = 10;
+    } else if (number == ']') {
+        number_value = 11;
+    } else if (number == ' ') {
+        number_value = -1;
+    } else {
+        number_value = number - '0';
+    }
+    
+    uint8_t tile, attr;
+    int tile_index;
+    for (uint8_t y = 0; y < LITTLE_NUMBER_HEIGHT; y++) {
+        for (uint8_t x = 0; x < LITTLE_NUMBER_WIDTH; x++) {
+            if (number_value >= 0) {
+                tile_index = number_value * LITTLE_NUMBER_HEIGHT * LITTLE_NUMBER_WIDTH * 2 + x * 2 + y * LITTLE_NUMBER_WIDTH * 2;
+                tile = s_little_number_buffer[tile_index];
+                attr = s_little_number_buffer[tile_index + 1];
+                GBC_Graphics_bg_set_tile_and_attrs(s_gbc_graphics, background, x + tile_x, y + tile_y, tile, attr);
+            } else {
+                GBC_Graphics_bg_set_tile_hidden(s_gbc_graphics, background, x + tile_x, y + tile_y, true);
+            }
         }
     }
 }
@@ -74,11 +111,30 @@ static void load_time() {
     draw_number(TIME_LAYER, TIME_X_TILE_OFFSET + 2 * NUMBER_WIDTH + 1, TIME_Y_TILE_OFFSET, time_buffer[2]);
     draw_number(TIME_LAYER, TIME_X_TILE_OFFSET + 3 * NUMBER_WIDTH + 1, TIME_Y_TILE_OFFSET, time_buffer[3]);
     draw_number(TIME_LAYER, TIME_X_TILE_OFFSET + 4 * NUMBER_WIDTH + 2, TIME_Y_TILE_OFFSET, time_buffer[4]);
+
+    // Write the date into a buffer
+    if (settings.ShowDate) {
+        static char date_buffer[8];
+        strftime(date_buffer, sizeof(date_buffer), settings.AmericanDateFormat ? "%m%d" : "%d%m", tick_time);
+        draw_little_number(TIME_LAYER, DATE_X_TILE_OFFSET + 2 * LITTLE_NUMBER_WIDTH - 1, DATE_Y_TILE_OFFSET, '[');
+        draw_little_number(TIME_LAYER, DATE_X_TILE_OFFSET + 2 * LITTLE_NUMBER_WIDTH + 1, DATE_Y_TILE_OFFSET, ']');
+        draw_little_number(TIME_LAYER, DATE_X_TILE_OFFSET + 0 * LITTLE_NUMBER_WIDTH, DATE_Y_TILE_OFFSET, date_buffer[0]);
+        draw_little_number(TIME_LAYER, DATE_X_TILE_OFFSET + 1 * LITTLE_NUMBER_WIDTH, DATE_Y_TILE_OFFSET, date_buffer[1]);
+        draw_little_number(TIME_LAYER, DATE_X_TILE_OFFSET + 3 * LITTLE_NUMBER_WIDTH + 1, DATE_Y_TILE_OFFSET, date_buffer[2]);
+        draw_little_number(TIME_LAYER, DATE_X_TILE_OFFSET + 4 * LITTLE_NUMBER_WIDTH + 1, DATE_Y_TILE_OFFSET, date_buffer[3]);
+    } else {
+        draw_little_number(TIME_LAYER, DATE_X_TILE_OFFSET + 2 * LITTLE_NUMBER_WIDTH - 1, DATE_Y_TILE_OFFSET, ' ');
+        draw_little_number(TIME_LAYER, DATE_X_TILE_OFFSET + 2 * LITTLE_NUMBER_WIDTH + 1, DATE_Y_TILE_OFFSET, ' ');
+        draw_little_number(TIME_LAYER, DATE_X_TILE_OFFSET + 0 * LITTLE_NUMBER_WIDTH, DATE_Y_TILE_OFFSET, ' ');
+        draw_little_number(TIME_LAYER, DATE_X_TILE_OFFSET + 1 * LITTLE_NUMBER_WIDTH, DATE_Y_TILE_OFFSET, ' ');
+        draw_little_number(TIME_LAYER, DATE_X_TILE_OFFSET + 3 * LITTLE_NUMBER_WIDTH + 1, DATE_Y_TILE_OFFSET, ' ');
+        draw_little_number(TIME_LAYER, DATE_X_TILE_OFFSET + 4 * LITTLE_NUMBER_WIDTH + 1, DATE_Y_TILE_OFFSET, ' ');
+    }
 }
 
 static uint16_t generate_backgrounds() {
     uint8_t new_background_group = rand() % NUM_BACKGROUND_GROUPS;
-    uint16_t loaded_tiles = (*LOAD_BACKGROUND_GROUP[new_background_group])(s_gbc_graphics, s_number_buffer);
+    uint16_t loaded_tiles = (*LOAD_BACKGROUND_GROUP[new_background_group])(s_gbc_graphics, s_number_buffer, s_little_number_buffer);
     last_background_group = new_background_group;
 
     GBC_Graphics_bg_set_scroll_pos(s_gbc_graphics, BG_LAYER, SCREEN_X_OFFSET, SCREEN_Y_OFFSET);
@@ -128,7 +184,7 @@ static void update_backgrounds() {
     while (NUM_BACKGROUND_GROUPS > 1 && new_background_group == last_background_group) {
         new_background_group = rand() % NUM_BACKGROUND_GROUPS;
     }
-    (*LOAD_BACKGROUND_GROUP[new_background_group])(s_gbc_graphics, s_number_buffer);
+    (*LOAD_BACKGROUND_GROUP[new_background_group])(s_gbc_graphics, s_number_buffer, s_little_number_buffer);
     last_background_group = new_background_group;
 
     load_time();
@@ -487,6 +543,8 @@ static void default_settings() {
     settings.PokemonChoices[2] = 6;
     settings.StepSeconds = 1;
     settings.ChangeMinutes = 1;
+    settings.ShowDate = true;
+    settings.AmericanDateFormat = true;
 }
 
 static void load_settings() {
@@ -553,6 +611,16 @@ static void inbox_received_handler(DictionaryIterator *iter, void *context) {
     Tuple *change_minutes_t = dict_find(iter, MESSAGE_KEY_ChangeMinutes);
     if (change_minutes_t) {
         settings.ChangeMinutes = atoi(change_minutes_t->value->cstring);
+    }
+    
+    Tuple *show_date_t = dict_find(iter, MESSAGE_KEY_ShowDate);
+    if(show_date_t) {
+        settings.ShowDate = show_date_t->value->int32 == 1;
+    }
+    
+    Tuple *american_date_t = dict_find(iter, MESSAGE_KEY_AmericanDateFormat);
+    if(american_date_t) {
+        settings.AmericanDateFormat = american_date_t->value->int32 == 1;
     }
 
     save_settings();

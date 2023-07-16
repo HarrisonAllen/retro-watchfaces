@@ -62,6 +62,11 @@
                 },
                 {
                     "type": "raw",
+                    "name": "DATA_ROUTE1_LITTLENUMBERMAPS",
+                    "file": "data/backgrounds/Route1/LittleNumberMaps.bin"
+                },
+                {
+                    "type": "raw",
                     "name": "DATA_ROUTE1~BW_TILESHEET",
                     "file": "data/backgrounds/Route1~bw/Tilesheet.bin"
                 },
@@ -89,6 +94,11 @@
                     "type": "raw",
                     "name": "DATA_ROUTE1~BW_NUMBERMAPS",
                     "file": "data/backgrounds/Route1~bw/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE1~BW_LITTLENUMBERMAPS",
+                    "file": "data/backgrounds/Route1~bw/LittleNumberMaps.bin"
                 },
                 {
                     "type": "raw",
