@@ -13,7 +13,7 @@
         "configurable"
     ],
     "pebble": {
-        "displayName": "Pokemon Generation 2 - Retro Series",
+        "displayName": "Pokemon Gen 2 - Retro Series",
         "uuid": "837712b3-7fbc-47f1-94a1-708cf64df653",
         "sdkVersion": "3",
         "enableMultiJS": true,
