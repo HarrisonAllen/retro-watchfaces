@@ -1,0 +1,126 @@
+{
+    "name": "base-gen2-watchface",
+    "author": "Harrison Allen",
+    "version": "1.0.0",
+    "keywords": [
+        "pebble-app"
+    ],
+    "private": true,
+    "dependencies": {},
+    "pebble": {
+        "displayName": "Pokemon Generation 2 - Retro Series",
+        "uuid": "837712b3-7fbc-47f1-94a1-708cf64df653",
+        "sdkVersion": "3",
+        "enableMultiJS": true,
+        "targetPlatforms": [
+            "basalt",
+            "chalk",
+            "diorite"
+        ],
+        "watchapp": {
+            "watchface": true
+        },
+        "messageKeys": [
+            "dummy"
+        ],
+        "resources": {
+            "media": [
+                {
+                    "type": "raw",
+                    "name": "DATA_MASK_TILESHEET",
+                    "file": "data/MaskTilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2_TILESHEET",
+                    "file": "data/backgrounds/Route2/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/Route2/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/Route2/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/Route2/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/Route2/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2_NUMBERMAPS",
+                    "file": "data/backgrounds/Route2/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2_LITTLENUMBERMAPS",
+                    "file": "data/backgrounds/Route2/LittleNumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2~BW_TILESHEET",
+                    "file": "data/backgrounds/Route2~bw/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2~BW_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/Route2~bw/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2~BW_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/Route2~bw/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2~BW_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/Route2~bw/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2~BW_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/Route2~bw/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2~BW_NUMBERMAPS",
+                    "file": "data/backgrounds/Route2~bw/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ROUTE2~BW_LITTLENUMBERMAPS",
+                    "file": "data/backgrounds/Route2~bw/LittleNumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ETHAN_TILESHEET",
+                    "file": "data/sprite/Ethan/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_ETHAN~BW_TILESHEET",
+                    "file": "data/sprite/Ethan~bw/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_KRIS_TILESHEET",
+                    "file": "data/sprite/Kris/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_KRIS~BW_TILESHEET",
+                    "file": "data/sprite/Kris~bw/Tilesheet.bin"
+                }
+            ]
+        }
+    }
+}
