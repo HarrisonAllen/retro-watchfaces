@@ -5,6 +5,7 @@
 ![Basalt](appstore/basalt.gif) ![Chalk](appstore/chalk.gif) ![Diorite](appstore/diorite.gif)
 
 Pokemon Generation 2 - Retro Series
+
 Choose your Pokemon!
 
 This animated watchface lets you travel in the Johto region with up to 3 Pokemon by your side. Featuring the second generation of Pokemon, this watchface pays homage to the originals (Gold, Silver, Crystal) featuring updated graphics from the remakes (HeartGold, SoulSilver) and includes all 100 of the Pokemon introduced in these games.
