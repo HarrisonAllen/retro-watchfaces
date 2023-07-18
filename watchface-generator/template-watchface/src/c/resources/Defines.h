@@ -24,6 +24,10 @@
 #define NUMBER_WIDTH 3
 #define TOTAL_NUMBERS 11
 
+#define LITTLE_NUMBER_HEIGHT 3
+#define LITTLE_NUMBER_WIDTH 2
+#define TOTAL_LITTLE_NUMBERS 12
+
 #define FRAME_DURATION 125 // In ms
 
 #define UPDATE_EVERY_SECOND {update_every_second}
@@ -31,6 +35,9 @@
 #define TIME_X_TILE_OFFSET 3
 #define TIME_Y_TILE_OFFSET {time_y_tile_offset}
 #define TIME_Y_PIXEL_SHIFT {time_y_pixel_shift}
+
+#define DATE_X_TILE_OFFSET (TIME_X_TILE_OFFSET + 3)
+#define DATE_Y_TILE_OFFSET (TIME_Y_TILE_OFFSET - (LITTLE_NUMBER_HEIGHT + 1))
 
 #define NUM_SPRITE_ACTORS 2
 #define SPRITE_BOTTOM_Y {sprite_bottom_y}
