@@ -1,0 +1,226 @@
+{
+    "name": "super-metroid",
+    "author": "Harrison Allen",
+    "version": "1.0.0",
+    "keywords": [
+        "pebble-app"
+    ],
+    "private": true,
+    "dependencies": {},
+    "pebble": {
+        "displayName": "Super Metroid - Retro Series",
+        "uuid": "e52fe0ce-fd7c-403b-a9f2-14624b151471",
+        "sdkVersion": "3",
+        "enableMultiJS": true,
+        "targetPlatforms": [
+            "basalt",
+            "chalk",
+            "diorite"
+        ],
+        "watchapp": {
+            "watchface": true
+        },
+        "messageKeys": [
+            "dummy"
+        ],
+        "resources": {
+            "media": [
+                {
+                    "type": "raw",
+                    "name": "DATA_BRINSTAR_TILESHEET",
+                    "file": "data/backgrounds/brinstar/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BRINSTAR_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/brinstar/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BRINSTAR_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/brinstar/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BRINSTAR_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/brinstar/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BRINSTAR_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/brinstar/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BRINSTAR_NUMBERMAPS",
+                    "file": "data/backgrounds/brinstar/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRATERIA_TILESHEET",
+                    "file": "data/backgrounds/crateria/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRATERIA_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/crateria/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRATERIA_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/crateria/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRATERIA_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/crateria/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRATERIA_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/crateria/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_CRATERIA_NUMBERMAPS",
+                    "file": "data/backgrounds/crateria/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIDIA_TILESHEET",
+                    "file": "data/backgrounds/maridia/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIDIA_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/maridia/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIDIA_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/maridia/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIDIA_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/maridia/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIDIA_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/maridia/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIDIA_NUMBERMAPS",
+                    "file": "data/backgrounds/maridia/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_NORFAIR_TILESHEET",
+                    "file": "data/backgrounds/norfair/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_NORFAIR_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/norfair/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_NORFAIR_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/norfair/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_NORFAIR_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/norfair/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_NORFAIR_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/norfair/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_NORFAIR_NUMBERMAPS",
+                    "file": "data/backgrounds/norfair/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_NORFAIR2_TILESHEET",
+                    "file": "data/backgrounds/norfair2/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_NORFAIR2_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/norfair2/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_NORFAIR2_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/norfair2/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_NORFAIR2_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/norfair2/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_NORFAIR2_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/norfair2/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_NORFAIR2_NUMBERMAPS",
+                    "file": "data/backgrounds/norfair2/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_TOURIAN_TILESHEET",
+                    "file": "data/backgrounds/tourian/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_TOURIAN_BACKGROUNDTILEMAP",
+                    "file": "data/backgrounds/tourian/BackgroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_TOURIAN_BACKGROUNDATTRMAP",
+                    "file": "data/backgrounds/tourian/BackgroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_TOURIAN_FOREGROUNDTILEMAP",
+                    "file": "data/backgrounds/tourian/ForegroundTilemap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_TOURIAN_FOREGROUNDATTRMAP",
+                    "file": "data/backgrounds/tourian/ForegroundAttrmap.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_TOURIAN_NUMBERMAPS",
+                    "file": "data/backgrounds/tourian/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_GRAVITYSUIT_TILESHEET",
+                    "file": "data/sprite/GravitySuit/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_POWERSUIT_TILESHEET",
+                    "file": "data/sprite/PowerSuit/Tilesheet.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_VARIASUIT_TILESHEET",
+                    "file": "data/sprite/VariaSuit/Tilesheet.bin"
+                }
+            ]
+        }
+    }
+}
