@@ -11,10 +11,10 @@
 
 const uint8_t GRAVITYSUIT_DATA[] = {
     // vram tile start, width, height
-    0, 3, 3, // 01
-    64, 3, 3, // 02
-    128, 3, 3, // 03
-    192, 3, 3, // 04
+    0, 7, 7, // 01
+    64, 7, 7, // 02
+    128, 7, 7, // 03
+    192, 7, 7, // 04
 };
 
 static uint16_t load_GravitySuit(GBC_Graphics *gbc_graphics, uint8_t vram_bank, uint8_t vram_start_offset, uint8_t palette_num, uint8_t *num_sprites, const uint8_t **sprite_data) {
@@ -40,10 +40,10 @@ static uint16_t load_GravitySuit(GBC_Graphics *gbc_graphics, uint8_t vram_bank, 
 
 const uint8_t POWERSUIT_DATA[] = {
     // vram tile start, width, height
-    0, 3, 3, // 01
-    64, 3, 3, // 02
-    128, 3, 3, // 03
-    192, 3, 3, // 04
+    0, 7, 7, // 01
+    64, 7, 7, // 02
+    128, 7, 7, // 03
+    192, 7, 7, // 04
 };
 
 static uint16_t load_PowerSuit(GBC_Graphics *gbc_graphics, uint8_t vram_bank, uint8_t vram_start_offset, uint8_t palette_num, uint8_t *num_sprites, const uint8_t **sprite_data) {
@@ -69,10 +69,10 @@ static uint16_t load_PowerSuit(GBC_Graphics *gbc_graphics, uint8_t vram_bank, ui
 
 const uint8_t VARIASUIT_DATA[] = {
     // vram tile start, width, height
-    0, 3, 3, // 01
-    64, 3, 3, // 02
-    128, 3, 3, // 03
-    192, 3, 3, // 04
+    0, 7, 7, // 01
+    64, 7, 7, // 02
+    128, 7, 7, // 03
+    192, 7, 7, // 04
 };
 
 static uint16_t load_VariaSuit(GBC_Graphics *gbc_graphics, uint8_t vram_bank, uint8_t vram_start_offset, uint8_t palette_num, uint8_t *num_sprites, const uint8_t **sprite_data) {

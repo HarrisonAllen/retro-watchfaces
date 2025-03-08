@@ -1,7 +1,7 @@
 {
     "name": "super-metroid",
     "author": "Harrison Allen",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "keywords": [
         "pebble-app"
     ],
@@ -25,6 +25,11 @@
         ],
         "resources": {
             "media": [
+                {
+                    "type": "raw",
+                    "name": "DATA_MASK_TILESHEET",
+                    "file": "data/MaskTilesheet.bin"
+                },
                 {
                     "type": "raw",
                     "name": "DATA_BRINSTAR_TILESHEET",
@@ -54,6 +59,11 @@
                     "type": "raw",
                     "name": "DATA_BRINSTAR_NUMBERMAPS",
                     "file": "data/backgrounds/brinstar/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_BRINSTAR_LITTLENUMBERMAPS",
+                    "file": "data/backgrounds/brinstar/LittleNumberMaps.bin"
                 },
                 {
                     "type": "raw",
@@ -87,6 +97,11 @@
                 },
                 {
                     "type": "raw",
+                    "name": "DATA_CRATERIA_LITTLENUMBERMAPS",
+                    "file": "data/backgrounds/crateria/LittleNumberMaps.bin"
+                },
+                {
+                    "type": "raw",
                     "name": "DATA_MARIDIA_TILESHEET",
                     "file": "data/backgrounds/maridia/Tilesheet.bin"
                 },
@@ -114,6 +129,11 @@
                     "type": "raw",
                     "name": "DATA_MARIDIA_NUMBERMAPS",
                     "file": "data/backgrounds/maridia/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_MARIDIA_LITTLENUMBERMAPS",
+                    "file": "data/backgrounds/maridia/LittleNumberMaps.bin"
                 },
                 {
                     "type": "raw",
@@ -147,6 +167,11 @@
                 },
                 {
                     "type": "raw",
+                    "name": "DATA_NORFAIR_LITTLENUMBERMAPS",
+                    "file": "data/backgrounds/norfair/LittleNumberMaps.bin"
+                },
+                {
+                    "type": "raw",
                     "name": "DATA_NORFAIR2_TILESHEET",
                     "file": "data/backgrounds/norfair2/Tilesheet.bin"
                 },
@@ -177,6 +202,11 @@
                 },
                 {
                     "type": "raw",
+                    "name": "DATA_NORFAIR2_LITTLENUMBERMAPS",
+                    "file": "data/backgrounds/norfair2/LittleNumberMaps.bin"
+                },
+                {
+                    "type": "raw",
                     "name": "DATA_TOURIAN_TILESHEET",
                     "file": "data/backgrounds/tourian/Tilesheet.bin"
                 },
@@ -204,6 +234,11 @@
                     "type": "raw",
                     "name": "DATA_TOURIAN_NUMBERMAPS",
                     "file": "data/backgrounds/tourian/NumberMaps.bin"
+                },
+                {
+                    "type": "raw",
+                    "name": "DATA_TOURIAN_LITTLENUMBERMAPS",
+                    "file": "data/backgrounds/tourian/LittleNumberMaps.bin"
                 },
                 {
                     "type": "raw",
